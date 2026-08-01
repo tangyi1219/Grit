@@ -20,11 +20,10 @@
 /* ====== Reset & Base ====== */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#F2EDDD;--card:#FFFDF7;--card-sky:#D6EAF5;--border:#887050;--dot:#B8A880;
+  --bg:#F2EDDD;--card:#FFFDF7;--border:#887050;--dot:#B8A880;
   --primary:#8A8A50;--aux1:#887050;--aux2:#8A8A50;--accent:#8A8A50;
   --text:#4A3A2A;--text2:#605040;--danger:#A07070;
   --radius-lg:28px;--radius-md:24px;--radius-sm:50px;
-  --shadow:0 4px 16px rgba(200,152,64,0.1);
   --font-en:'Press Start 2P',monospace;--font-cn:'Zpix','Microsoft YaHei',sans-serif;
 }
 html{font-size:14px}
@@ -114,7 +113,6 @@ main{display:flex;gap:12px;padding:12px 16px;max-width:1200px;margin:0 auto}
   opacity:0.85;
 }
 .task-card .btn-icon:hover{transform:scale(1.2);opacity:1;background:var(--border)}
-.task-card .btn-icon.select{font-size:22px;font-weight:bold;color:var(--primary)}
 .task-card .btn-icon.focus{font-size:20px}
 .task-card .btn-icon.continue{font-size:20px}
 .task-card .btn-icon.done{font-size:20px}
@@ -524,7 +522,7 @@ function getTaskTemplates(){
 const STORAGE_KEY='grit_data';
 let state={
   taskStates:{},customRecords:[],mockScores:[],consecutiveDays:0,
-  lastActiveDate:'',lowEfficiencyDismissedToday:false,focusTimer:null,
+  lastActiveDate:'',lowEfficiencyDismissedToday:false,
   currentStage:'',currentTab:'',subPhaseTab:{}
 };
 
@@ -554,7 +552,6 @@ function parseDate(str){const p=str.split('-');return new Date(+p[0],+p[1]-1,+p[
 function isInRange(dateStr,range){return dateStr>=range.start&&dateStr<=range.end}
 function formatMin(m){if(m>=60){const h=Math.floor(m/60),r=m%60;return r>0?h+'h'+r+'min':h+'h'}return m+'min'}
 function isToday(dateStr){return dateStr===getTodayStr()}
-function isYesterday(dateStr){return dateStr===getYesterdayStr()}
 
 function getStageConfig(stageId){return STAGES.find(s=>s.id===stageId)}
 function getCurrentStageAndSubPhase(){
@@ -667,20 +664,20 @@ function goToTaskPool(){dismissLowBanner();window.scrollTo({top:document.getElem
 // ========== POMODORO ==========
 let pomodoroInterval=null;
 let pomodoroAutoPaused=false;
-let pomodoroData={taskId:null,remaining:0,total:0,elapsedBefore:0,countUp:false};
+let pomodoroData={taskId:null,remaining:0,total:0,countUp:false};
 
 function startPomodoro(taskId){
   const tpl=getTaskTemplate(taskId);const ts=getTaskState(taskId);
   if(tpl.elastic){
     const elapsed=ts.focusElapsedMinutes*60;
-    pomodoroData={taskId,remaining:0,total:-1,elapsedBefore:elapsed,countUp:true};
+    pomodoroData={taskId,remaining:0,total:-1,countUp:true};
     document.getElementById('pomo-task-label').textContent=tpl.name+' (弹性·正计时)';
   }else{
     const total=tpl.durationMinutes*60;
     const elapsed=ts.focusElapsedMinutes*60;
     const remaining=total-elapsed;
     if(remaining<=0){completeTask(taskId);return}
-    pomodoroData={taskId,remaining,total,elapsedBefore:elapsed,countUp:false};
+    pomodoroData={taskId,remaining,total,countUp:false};
     document.getElementById('pomo-task-label').textContent=tpl.name+' ('+tpl.durationMinutes+'min)';
   }
   updatePomodoroDisplay();
@@ -846,7 +843,7 @@ function toggleCustomRecord(){
 function addCustomRecord(){
   const text=document.getElementById('custom-record-text').value.trim();
   if(!text)return;
-  state.customRecords.push({id:'cr'+Date.now(),text,date:getTodayStr(),stage:state.currentStage});
+  state.customRecords.push({id:'cr'+Date.now(),text,date:getTodayStr(),stage:state.currentTab});
   document.getElementById('custom-record-text').value='';
   document.getElementById('custom-record-input').style.display='none';
   saveState();renderAll();
@@ -935,16 +932,19 @@ function renderAll(){
       let statusClass='';if(completed)statusClass=' completed';else if(selected)statusClass=' selected';
       let actions='';
       if(inPomodoro){actions=''}
-      else if(completed){actions='<button class="btn-icon undo" onclick="undoTask(\''+t.id+'\')" title="撤回">❎</button>'}
-      else if(!selected){actions='<button class="btn-icon select" onclick="selectTask(\''+t.id+'\')" title="选择">+</button>'}
-      else if(selected&&!hasFocus){actions='<button class="btn-icon focus" onclick="startFocus(\''+t.id+'\')" title="开始专注">🍅</button><button class="btn-icon done" onclick="manualComplete(\''+t.id+'\')" title="手动完成">✅</button><button class="btn-icon deselect" onclick="deselectTask(\''+t.id+'\')" title="取消选择">✖</button>'}
-      else if(selected&&hasFocus){actions='<button class="btn-icon continue" onclick="startFocus(\''+t.id+'\')" title="继续专注">🔁</button><button class="btn-icon done" onclick="manualComplete(\''+t.id+'\')" title="手动完成">✅</button><button class="btn-icon deselect" onclick="deselectTask(\''+t.id+'\')" title="取消选择">✖</button>'}
+      else if(completed){actions='<button class="btn-icon undo" onclick="event.stopPropagation();undoTask(\''+t.id+'\')" title="撤回">❎</button>'}
+      else if(!selected){actions=''}
+      else if(selected&&!hasFocus){actions='<button class="btn-icon focus" onclick="event.stopPropagation();startFocus(\''+t.id+'\')" title="开始专注">🍅</button><button class="btn-icon done" onclick="event.stopPropagation();manualComplete(\''+t.id+'\')" title="手动完成">✅</button><button class="btn-icon deselect" onclick="event.stopPropagation();deselectTask(\''+t.id+'\')" title="取消选择">✖</button>'}
+      else if(selected&&hasFocus){actions='<button class="btn-icon continue" onclick="event.stopPropagation();startFocus(\''+t.id+'\')" title="继续专注">🔁</button><button class="btn-icon done" onclick="event.stopPropagation();manualComplete(\''+t.id+'\')" title="手动完成">✅</button><button class="btn-icon deselect" onclick="event.stopPropagation();deselectTask(\''+t.id+'\')" title="取消选择">✖</button>'}
+      let cardClick='';
+      if(!completed&&!selected&&!inPomodoro){cardClick=' onclick="selectTask(\''+t.id+'\')" style="cursor:pointer;border-radius:24px"'}
       let tags=t.tags.map(tg=>'<span class="tag'+(tg==='模考'?' mock':'')+'" style="border-radius:50px">'+tg+'</span>').join('');
       if(t.subject)tags+='<span class="tag" style="border-radius:50px">'+t.subject+'</span>';
       const diffClass=t.difficulty==='高'?'diff-high':t.difficulty==='中'?'diff-mid':'diff-low';
       tags+='<span class="tag '+diffClass+'" style="border-radius:50px">'+t.difficulty+'</span>';
       const durationText=t.elastic?'弹性':t.durationMinutes+'min';
-      return '<div class="task-card'+statusClass+'" style="border-radius:24px"><span class="task-name">'+t.name+'</span><span class="task-meta">'+durationText+'</span><div class="task-tags">'+tags+'</div><div class="task-actions">'+actions+'</div></div>';
+      const cardStyle=cardClick?cardClick:' style="border-radius:24px"';
+      return '<div class="task-card'+statusClass+'"'+cardStyle+'><span class="task-name">'+t.name+'</span><span class="task-meta">'+durationText+'</span><div class="task-tags">'+tags+'</div><div class="task-actions">'+actions+'</div></div>';
     }).join('');
   }
 
