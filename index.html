@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Grit">
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEwMCIgZmlsbD0iI0YyRURERCIvPjx0ZXh0IHg9IjI1NiIgeT0iMzYwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjM1MCI+8J+nqTwvdGV4dD48L3N2Zz4=">
+<meta name="theme-color" content="#8A8A50">
+<link rel="manifest" href="data:application/json;base64,eyJpY29ucyI6W3sic2l6ZXMiOiIxOTJ4MTkyIiwidHlwZSI6ImltYWdlL3N2Zyt4bWwiLCJzcmMiOiJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUI0Yld4dWN6MGlhSFIwY0RvdkwzZDNkeTUzTXk1dmNtY3ZNakF3TUM5emRtY2lJSFpwWlhkQ2IzZzlJakFnTUNBMU1USWdOVEV5SWo0OGNtVmpkQ0IzYVdSMGFEMGlOVEV5SWlCb1pXbG5hSFE5SWpVeE1pSWdjbmc5SWpFd01DSWdabWxzYkQwaUkwWXlSVVJFUkNJdlBqeDBaWGgwSUhnOUlqSTFOaUlnZVQwaU16WXdJaUIwWlhoMExXRnVZMmh2Y2owaWJXbGtaR3hsSWlCbWIyNTBMWE5wZW1VOUlqTTFNQ0krOEorbnFUd3ZkR1Y0ZEQ0OEwzTjJaejQ9In0seyJzaXplcyI6IjUxMng1MTIiLCJ0eXBlIjoiaW1hZ2Uvc3ZnK3htbCIsInNyYyI6ImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjRiV3h1Y3owaWFIUjBjRG92TDNkM2R5NTNNeTV2Y21jdk1qQXdNQzl6ZG1jaUlIWnBaWGRDYjNnOUlqQWdNQ0ExTVRJZ05URXlJajQ4Y21WamRDQjNhV1IwYUQwaU5URXlJaUJvWldsbmFIUTlJalV4TWlJZ2NuZzlJakV3TUNJZ1ptbHNiRDBpSTBZeVJVUkVSQ0l2UGp4MFpYaDBJSGc5SWpJMU5pSWdlVDBpTXpZd0lpQjBaWGgwTFdGdVkyaHZjajBpYldsa1pHeGxJaUJtYjI1MExYTnBlbVU5SWpNMU1DSSs4SitucVR3dmRHVjRkRDQ4TDNOMlp6ND0ifV0sInRoZW1lX2NvbG9yIjoiIzhBOEE1MCIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwic2hvcnRfbmFtZSI6IkdyaXQiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiI0YyRURERCIsIm5hbWUiOiJHcml0Iiwic3RhcnRfdXJsIjoiLiJ9">
+<title>🧩 Grit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+/* ====== Fonts ====== */
+@font-face{font-family:'Zpix';src:url('https://cdn.jsdelivr.net/gh/SolidZORO/zpix-pixel-font/dist/Zpix.ttf') format('truetype');font-display:swap}
+
+/* ====== Reset & Base ====== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F2EDDD;--card:#FFFDF7;--card-sky:#D6EAF5;--border:#887050;--dot:#B8A880;
+  --primary:#8A8A50;--aux1:#887050;--aux2:#8A8A50;--accent:#8A8A50;
+  --text:#4A3A2A;--text2:#605040;--danger:#A07070;
+  --radius-lg:28px;--radius-md:24px;--radius-sm:50px;
+  --shadow:0 4px 16px rgba(200,152,64,0.1);
+  --font-en:'Press Start 2P',monospace;--font-cn:'Zpix','Microsoft YaHei',sans-serif;
+}
+html{font-size:14px}
+body{
+  font-family:var(--font-cn);background:var(--bg);color:var(--text);
+  min-height:100vh;line-height:1.6;
+  background-image:radial-gradient(circle,var(--dot) 1px,transparent 1px);
+  background-size:4px 4px;background-position:0 0;
+  padding-bottom:70px;
+}
+
+/* ====== Header ====== */
+header{
+  position:sticky;top:8px;z-index:100;background:#E8EAD8;border:1.5px solid var(--border);
+  padding:8px 14px;display:flex;flex-wrap:nowrap;align-items:center;justify-content:space-between;
+  box-shadow:0 2px 12px rgba(168,168,120,0.08);
+  border-radius:var(--radius-md);margin:8px 8px 0 8px;overflow:hidden;min-width:0;
+}
+header .app-name{font-family:var(--font-en);font-size:16px;color:#4A4A30;flex-shrink:0;white-space:nowrap}
+header .header-info{display:flex;gap:6px;font-size:22px;font-weight:bold;color:#5A5A40;flex-wrap:nowrap;overflow:hidden;flex-shrink:1;min-width:0}
+header .header-info span{white-space:nowrap;font-size:22px;font-weight:bold}
+
+/* ====== Low Efficiency Banner ====== */
+#low-banner{
+  display:none;margin:8px 16px;padding:14px 16px;background:var(--accent);color:#fff;
+  border-radius:var(--radius-md)!important;font-size:13px;text-align:center;position:relative;
+  box-shadow:0 4px 16px rgba(107,140,66,0.25);
+}
+#low-banner.show{display:block}
+#low-banner .btn{display:inline-block;margin:8px 4px 0;padding:6px 16px;
+  border-radius:var(--radius-sm);background:rgba(255,255,255,0.25);color:#fff;cursor:pointer;border:none;font-size:12px;font-family:var(--font-cn)}
+#low-banner .close{position:absolute;top:6px;right:12px;cursor:pointer;font-size:16px;opacity:0.7}
+
+/* ====== Sub-phase Bar ====== */
+#subphase-bar{
+  text-align:center;padding:0 0 4px 0;font-size:13px;color:var(--accent);font-weight:bold;
+  display:none;gap:6px;justify-content:center;flex-wrap:wrap;
+}
+.subphase-tab{
+  font-size:26px;cursor:pointer;border:none;background:#F2EDDD;color:var(--primary);
+  padding:4px 10px;border-radius:50px;font-family:var(--font-cn);transition:all 0.15s;user-select:none;line-height:1;opacity:0.7;
+}
+.subphase-tab:hover{opacity:1;color:var(--text);background:#EDE5D5}
+.subphase-tab.active{opacity:1;color:#4A4A30;background:#F2EDDD;font-weight:bold;border:1.5px solid var(--primary)}
+
+/* ====== Main Layout ====== */
+main{display:flex;gap:12px;padding:12px 16px;max-width:1200px;margin:0 auto}
+#task-pool{flex:1;min-width:0}
+#right-panel{flex:1;min-width:0;display:flex;flex-direction:column;gap:12px}
+
+/* ====== Cards ====== */
+.card{
+  background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius-md)!important;
+  padding:14px;box-shadow:0 2px 12px rgba(107,140,66,0.05);
+}
+#task-pool{background:#EDE5D5}
+#dashboard{background:#E8EAD8}
+#right-panel > .card:first-of-type{background:#E8EAD8}
+.card h3{font-size:14px;margin-bottom:2px;color:var(--primary);font-family:var(--font-en);font-size:11px}
+
+/* ====== Task Card ====== */
+.task-card{
+  background:#E0E0D0;border:1px solid var(--border);border-radius:var(--radius-md)!important;
+  padding:3px 8px;margin-bottom:3px;box-shadow:0 1px 4px rgba(107,140,66,0.04);
+  transition:box-shadow 0.2s;display:flex;align-items:center;gap:4px;
+}
+.task-card.selected{border-color:var(--primary);background:#F5F2E8}
+.task-card.completed{border-color:var(--aux1);background:#F2F5EE;opacity:0.85}
+.task-card .task-name{font-weight:bold;font-size:13px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.task-card .task-meta{font-size:11px;color:var(--text2);flex-shrink:0;white-space:nowrap}
+.task-card .task-tags{display:flex;gap:3px;flex-wrap:nowrap;flex-shrink:0}
+.task-card .tag{
+  font-size:12px;padding:2px 8px;border-radius:50px;
+  background:var(--bg);color:var(--text2);border:1px solid var(--border);
+  white-space:nowrap;
+}
+.task-card .tag.mock{background:#F8F0E8;color:#B0A090;border-color:#D8C8B8}
+.task-card .tag.diff-high{color:var(--danger)}
+.task-card .tag.diff-mid{color:#B0A090}
+.task-card .tag.diff-low{color:var(--aux2)}
+.task-card .task-actions{display:flex;gap:3px;flex-shrink:0;align-items:center}
+.task-card .btn-icon{
+  width:32px;height:32px;border-radius:50%;cursor:pointer;
+  border:none;background:var(--bg);
+  font-size:20px;display:flex;align-items:center;justify-content:center;
+  padding:0;transition:all 0.15s;line-height:1;flex-shrink:0;
+  opacity:0.85;
+}
+.task-card .btn-icon:hover{transform:scale(1.2);opacity:1;background:var(--border)}
+.task-card .btn-icon.select{font-size:22px;font-weight:bold;color:var(--primary)}
+.task-card .btn-icon.focus{font-size:20px}
+.task-card .btn-icon.continue{font-size:20px}
+.task-card .btn-icon.done{font-size:20px}
+.task-card .btn-icon.undo{font-size:20px}
+.task-card .btn-icon.deselect{font-size:18px;color:var(--text2);opacity:0.6}
+.task-card .btn-icon.deselect:hover{opacity:1;color:var(--text)}
+
+/* ====== Done List ====== */
+.done-list{display:flex;gap:12px;flex-wrap:nowrap}
+.done-col{flex:1;min-width:0}
+.done-col h4{font-size:13px;margin-bottom:8px;color:var(--primary);padding-bottom:6px;border-bottom:1.5px solid var(--border)}
+.done-item{font-size:12px;padding:6px 10px;margin-bottom:4px;background:var(--bg);border-radius:var(--radius-sm)!important;display:flex;justify-content:space-between;align-items:center}
+.done-item .time{color:var(--text2);font-size:10px;font-family:var(--font-en)}
+.done-item.custom-record{font-style:italic}
+.done-item .del-btn{cursor:pointer;color:var(--danger);font-size:22px;padding:0 4px;background:none;border:none;font-family:var(--font-cn)}
+
+#custom-record-btn{display:block;width:100%;margin-top:6px;padding:8px;font-size:12px;cursor:pointer;
+  border:1.5px dashed var(--border);border-radius:var(--radius-sm);background:transparent;color:var(--text2);font-family:var(--font-cn);min-height:44px}
+#custom-record-input{display:none;margin-top:6px}
+#custom-record-input input{width:100%;padding:10px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:12px;font-family:var(--font-cn);background:var(--bg)}
+#custom-record-input .btn-row{display:flex;gap:6px;margin-top:6px}
+#custom-record-input .btn-icon{
+  width:48px;height:48px;border-radius:50%;cursor:pointer;
+  border:none;background:var(--bg);font-size:26px;display:flex;
+  align-items:center;justify-content:center;padding:0;transition:all 0.15s;line-height:1;
+}
+#custom-record-input .btn-icon:hover{transform:scale(1.15);background:var(--border)}
+#custom-record-input .btn-icon.save{color:var(--primary)}
+#custom-record-input .btn-icon.cancel{color:var(--text2);opacity:0.6}
+#custom-record-input .btn-icon.cancel:hover{opacity:1}
+
+/* ====== Dashboard ====== */
+.dashboard .stat-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px}
+.dashboard .stat-row:last-child{border-bottom:none}
+.dashboard .stat-label{color:var(--text2)}
+.dashboard .stat-value{font-weight:bold;color:var(--primary)}
+
+.progress-bar{width:100%;height:14px;overflow:hidden;margin:4px 0 10px;border-radius:50px;background-image:radial-gradient(circle 3px,var(--dot) 100%,transparent 0);background-size:10px 10px;background-repeat:repeat-x}
+.progress-bar .fill{height:100%;border-radius:50px;transition:width 0.5s;min-width:0;background-image:radial-gradient(circle 3px,var(--primary) 100%,transparent 0);background-size:10px 10px;background-repeat:repeat-x}
+.progress-label{display:flex;justify-content:space-between;font-size:11px;color:var(--text2);margin-bottom:2px;align-items:center}
+.progress-label .pct-small{font-size:10px;color:var(--text2);opacity:0.55;margin-left:4px;white-space:nowrap}
+
+.subject-stats{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;margin:8px 0}
+.subject-stats span{border:none;background:none;padding:2px 0;font-size:13px}
+
+.mock-chart{width:100%;min-height:48px;background:var(--bg);border-radius:var(--radius-lg);margin-top:8px;padding:8px;overflow:visible}
+.mock-chart svg{display:block;width:100%}
+
+/* ====== Tab Bar ====== */
+#tab-bar{
+  position:fixed;bottom:0;left:0;right:0;z-index:100;display:flex;flex-wrap:nowrap;
+  background:#E8EAD8;border-top:1.5px solid var(--border);border-radius:var(--radius-md);
+  box-shadow:0 -2px 12px rgba(168,168,120,0.08);
+}
+#tab-bar button{
+  flex:1 0 auto;padding:10px 4px;border:none;background:transparent;color:var(--text2);
+  font-size:30px;cursor:pointer;font-family:var(--font-cn);min-height:50px;transition:all 0.2s;white-space:nowrap;
+  border-bottom:3px solid transparent;border-radius:var(--radius-sm);margin:4px 2px;
+}
+#tab-bar button.active{background:var(--primary);color:#fff;font-weight:bold;border-bottom-color:var(--aux1)}
+#tab-bar button:hover{background:var(--bg)}
+
+/* ====== Pomodoro Overlay ====== */
+#pomodoro-overlay{
+  display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:200;
+  background:#D4B8B0;justify-content:center;align-items:center;
+}
+#pomodoro-overlay.show{display:flex}
+.pomodoro-dialog{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  width:100%;height:100%;text-align:center;padding:20px;
+}
+@keyframes tomatoBounce{
+  0%,100%{transform:scale(1)}
+  40%{transform:scale(1.08)}
+  70%{transform:scale(1.04)}
+}
+.pomodoro-dialog .tomato{margin-bottom:20px;animation:tomatoBounce 1.2s ease-in-out infinite;font-size:300px;line-height:1}
+.pomodoro-dialog .tomato.paused{animation-play-state:paused}
+.pomodoro-dialog .timer{
+  font-family:var(--font-en);font-size:64px;color:var(--primary);margin-bottom:12px;letter-spacing:6px;
+  min-width:280px;text-align:center;
+}
+.pomodoro-dialog .task-label{font-size:14px;color:var(--text2);margin-bottom:32px}
+.pomodoro-dialog .pomo-actions{display:flex;gap:28px;justify-content:center}
+.pomodoro-dialog .pomo-btn-icon{
+  width:72px;height:72px;border-radius:50%;border:2px solid var(--border);cursor:pointer;
+  background:var(--bg);font-size:40px;display:flex;align-items:center;justify-content:center;
+  padding:0;transition:all 0.15s;line-height:1;
+}
+.pomodoro-dialog .pomo-btn-icon:hover{transform:scale(1.15);border-color:var(--primary);background:#F0EDE0}
+.pomodoro-dialog .pomo-btn-icon.pause{color:var(--primary)}
+.pomodoro-dialog .pomo-btn-icon.end{color:var(--danger)}
+
+/* ====== Modal ====== */
+.modal-overlay{
+  display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:300;
+  background:rgba(74,90,53,0.4);justify-content:center;align-items:center;
+}
+.modal-overlay.show{display:flex}
+.modal-box{
+  background:var(--card);border-radius:var(--radius-lg)!important;padding:24px;max-width:360px;width:90%;
+  box-shadow:0 8px 32px rgba(107,140,66,0.15);text-align:center;
+}
+.modal-box h3{font-size:14px;margin-bottom:14px;color:var(--primary)}
+.modal-box input{width:100%;padding:10px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:14px;text-align:center;font-family:var(--font-cn);margin-bottom:12px}
+.modal-box .modal-actions{display:flex;gap:8px;justify-content:center}
+.modal-box .modal-btn{
+  padding:8px 20px;border-radius:var(--radius-sm);border:none;cursor:pointer;
+  font-size:12px;font-family:var(--font-cn);min-height:44px;transition:all 0.15s;
+}
+.modal-box .modal-btn:hover{transform:scale(1.05)}
+.modal-box .modal-btn.submit{background:var(--primary);color:#fff}
+.modal-box .modal-btn.skip{background:var(--bg);color:var(--text2);border:1.5px solid var(--border)}
+
+/* ====== Rest Screen ====== */
+#rest-screen{display:none;text-align:center;padding:60px 20px}
+#rest-screen.show{display:block}
+#rest-screen .rest-emoji{font-size:80px;margin-bottom:16px}
+#rest-screen .rest-text{font-size:16px;color:var(--text2);line-height:2}
+
+/* ====== CSV Controls ====== */
+.csv-controls{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+.csv-controls button{font-size:26px;cursor:pointer;border:none;background:none;color:var(--text2);padding:4px;font-family:var(--font-cn);transition:all 0.15s;line-height:1}
+.csv-controls button:hover{transform:scale(1.2);color:var(--primary)}
+
+/* ====== Responsive ====== */
+@media(max-width:768px){
+  main{flex-direction:column;padding:8px}
+  header{padding:6px 8px;margin:4px 4px 0 4px;overflow-x:auto}
+  header .app-name{font-size:10px!important}
+  header .header-info{font-size:13px!important;gap:3px}
+  header .header-info span{font-size:13px!important;font-weight:bold!important;white-space:nowrap}
+  .pomodoro-dialog .timer{font-size:42px}
+  .pomodoro-dialog .tomato{font-size:160px!important}
+  .task-card .btn-icon{width:34px;height:34px;font-size:18px}
+  .task-card .btn-icon.select{font-size:20px}
+  #tab-bar button{flex:1 0 auto;font-size:18px;padding:8px 2px;margin:4px 1px}
+  .pomodoro-dialog .pomo-btn-icon{width:52px;height:52px;font-size:28px}
+  .csv-controls button{font-size:18px}
+}
+</style>
+</head>
+<body>
+
+<!-- Low Efficiency Banner -->
+<div id="low-banner" style="border-radius:24px">
+  <span>连续两天没有学习记录，要不要从任务池选一个低强度任务？</span>
+  <br><button class="btn" onclick="goToTaskPool()">去任务池看看</button>
+  <span class="close" onclick="dismissLowBanner()">&times;</span>
+</div>
+
+<!-- Header -->
+<header>
+  <div class="app-name">🧩 Grit</div>
+  <div class="header-info">
+    <span id="header-date" style="font-size:20px;font-weight:bold">📅 ----</span>
+    <span id="header-streak" style="font-size:20px;font-weight:bold">🔥 连续0天</span>
+    <span id="header-focus" style="font-size:20px;font-weight:bold">⏱️ 0min</span>
+  </div>
+</header>
+
+<!-- Main Content -->
+<main id="main-content">
+  <section id="task-pool" class="card" style="border-radius:24px">
+    <div id="task-pool-header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px">
+      <h3 style="margin-bottom:0">📋 今日任务池</h3>
+      <div id="subphase-bar"></div>
+    </div>
+    <input type="text" id="task-search" placeholder="🔍 搜索任务..." oninput="renderAll()" style="width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:50px;background:var(--bg);font-size:12px;font-family:var(--font-cn);color:var(--text);margin-bottom:8px;outline:none">
+    <div id="task-list"></div>
+  </section>
+  <section id="right-panel">
+    <div class="card" style="border-radius:24px">
+      <h3>✅ Done List</h3>
+      <div class="done-list">
+        <div class="done-col"><h4>昨日完成</h4><div id="yesterday-list"></div></div>
+        <div class="done-col"><h4>今日完成</h4><div id="today-list"></div></div>
+      </div>
+      <div id="custom-record-section">
+        <button id="custom-record-btn" onclick="toggleCustomRecord()" style="border-radius:50px">📝 添加自定义记录</button>
+        <div id="custom-record-input">
+          <input type="text" id="custom-record-text" placeholder="输入你今天完成的事情..." maxlength="100" style="border-radius:50px">
+          <div class="btn-row">
+            <button class="btn-icon save" onclick="addCustomRecord()" title="保存">💾</button>
+            <button class="btn-icon cancel" onclick="toggleCustomRecord()" title="取消">✖</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card dashboard" id="dashboard" style="border-radius:24px"></div>
+  </section>
+</main>
+
+<!-- Rest Screen -->
+<div id="rest-screen">
+  <div class="rest-emoji">🌿</div>
+  <div class="rest-text">今日休息，没有学习任务。<br>好好放松一下吧～</div>
+</div>
+
+<!-- Bottom Tab Bar -->
+<nav id="tab-bar">
+  <button data-stage="二级" onclick="switchStage('二级')" title="二级">📗</button>
+  <button data-stage="四级" onclick="switchStage('四级')" title="四级">📘</button>
+  <button data-stage="六级" onclick="switchStage('六级')" title="六级">📙</button>
+  <button data-stage="专升本" onclick="switchStage('专升本')" title="专升本">🎓</button>
+  <button data-stage="CPA" onclick="switchStage('CPA')" title="CPA">📊</button>
+  <button data-stage="rest" onclick="switchStage('rest')" title="休息">☕</button>
+</nav>
+
+<!-- Pomodoro Overlay -->
+<div id="pomodoro-overlay">
+  <div class="pomodoro-dialog">
+    <div class="tomato">🍅</div>
+    <div class="timer" id="pomo-timer">00:00</div>
+    <div class="task-label" id="pomo-task-label"></div>
+    <div class="pomo-actions">
+      <button class="pomo-btn-icon pause" id="pomo-pause-btn" onclick="togglePomodoroPause()" title="暂停">⏸️</button>
+      <button class="pomo-btn-icon end" onclick="endPomodoroEarly()" title="结束专注">⏹️</button>
+    </div>
+  </div>
+</div>
+
+<!-- Mock Exam Modal -->
+<div class="modal-overlay" id="mock-modal">
+  <div class="modal-box" style="border-radius:28px">
+    <h3>📊 模考完成！</h3>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:12px" id="mock-task-name"></p>
+    <input type="number" id="mock-score" placeholder="请输入分数" min="0" max="750">
+    <div class="modal-actions">
+      <button class="modal-btn submit" onclick="submitMockScore()">提交</button>
+      <button class="modal-btn skip" onclick="skipMockScore()">跳过</button>
+    </div>
+  </div>
+</div>
+
+<!-- Early End Confirm Modal -->
+<div class="modal-overlay" id="early-end-modal">
+  <div class="modal-box" style="border-radius:28px">
+    <h3>确认提前结束？</h3>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:12px">提前结束不会标记任务完成，已累计的专注时长将保留。</p>
+    <div class="modal-actions">
+      <button class="modal-btn submit" style="background:var(--danger);color:#fff" onclick="confirmEarlyEnd()" title="确认结束">⏹️</button>
+      <button class="modal-btn skip" onclick="cancelEarlyEnd()" title="继续专注">▶️</button>
+    </div>
+  </div>
+</div>
+
+<!-- Rest Timer Overlay -->
+<div id="rest-overlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:210;background:#E8EAD8;justify-content:center;align-items:center;flex-direction:column">
+  <div style="font-size:80px;margin-bottom:20px">☕</div>
+  <div style="font-family:var(--font-en);font-size:48px;color:var(--primary);margin-bottom:12px" id="rest-timer">05:00</div>
+  <div style="font-size:14px;color:var(--text2);margin-bottom:32px">休息一下，让大脑放松</div>
+  <div style="display:flex;gap:20px">
+    <button onclick="skipRest()" style="width:64px;height:64px;border-radius:50%;border:2px solid var(--border);cursor:pointer;background:var(--bg);font-size:32px;display:flex;align-items:center;justify-content:center">⏭️</button>
+  </div>
+</div>
+
+<script>
+// ===========================
+// Grit · 拼豆像素风学习工作台
+// ===========================
+
+// ========== CONSTANTS ==========
+const STAGES = [
+  {id:'二级',name:'二级',start:'2026-07-30',end:'2026-09-19',examDate:'2026-09-19',hasSubPhase:false,totalMin:5400},
+  {id:'四级',name:'四级',start:'2026-09-20',end:'2026-12-12',examDate:'2026-12-12',hasSubPhase:true,totalMin:10650,subPhases:[
+    {id:'phase1',name:'基础阶段',start:'2026-09-20',end:'2026-10-20',totalMin:3000},
+    {id:'phase2',name:'强化阶段',start:'2026-10-21',end:'2026-11-25',totalMin:5250},
+    {id:'phase3',name:'冲刺阶段',start:'2026-11-26',end:'2026-12-12',totalMin:2400}
+  ]},
+  {id:'六级',name:'六级',start:'2027-03-01',end:'2027-06-12',examDate:'2027-06-12',hasSubPhase:true,totalMin:13350,subPhases:[
+    {id:'phase1',name:'基础阶段',start:'2027-03-01',end:'2027-04-02',totalMin:4800},
+    {id:'phase2',name:'强化阶段',start:'2027-04-03',end:'2027-05-18',totalMin:6750},
+    {id:'phase3',name:'冲刺阶段',start:'2027-05-19',end:'2027-06-12',totalMin:1800}
+  ]},
+  {id:'专升本',name:'专升本',start:'2027-06-15',end:'2028-03-21',examDate:'2028-03-21',hasSubPhase:true,totalMin:91740,subPhases:[
+    {id:'phase1',name:'基础搭建',start:'2027-06-15',end:'2027-09-30',totalMin:35310},
+    {id:'phase2',name:'专项强化',start:'2027-10-01',end:'2028-02-28',totalMin:49500},
+    {id:'phase3',name:'全真冲刺',start:'2028-03-01',end:'2028-03-21',totalMin:6930}
+  ]},
+  {id:'CPA',name:'CPA入门',start:'2028-03-25',end:'2028-08-22',examDate:'2028-08-22',hasSubPhase:true,totalMin:40200,subPhases:[
+    {id:'phase1',name:'基础阶段',start:'2028-03-25',end:'2028-06-30',totalMin:27048},
+    {id:'phase2',name:'专项强化',start:'2028-07-01',end:'2028-07-31',totalMin:8556},
+    {id:'phase3',name:'全真冲刺',start:'2028-08-01',end:'2028-08-22',totalMin:6210}
+  ]}
+];
+
+const CPA_SUBJECT_TOTALS = {会计:30000,战略:10200};
+
+// ========== TASK TEMPLATES ==========
+function getTaskTemplates(){
+  const t=[];
+  let id=0;
+  function add(o){t.push({id:'t'+(id++),...o})}
+
+  // 二级
+  add({name:'Excel真题',durationMinutes:90,weight:30,difficulty:'高',tags:[],subject:'',stage:'二级',relatedPhase:'',relatedSubPhase:'',dateRange:{start:'2026-07-30',end:'2026-09-19'},isMockExam:false});
+  add({name:'Word真题',durationMinutes:90,weight:30,difficulty:'中',tags:[],subject:'',stage:'二级',relatedPhase:'',relatedSubPhase:'',dateRange:{start:'2026-07-30',end:'2026-09-19'},isMockExam:false});
+  add({name:'PPT真题',durationMinutes:60,weight:20,difficulty:'低',tags:['保分项'],subject:'',stage:'二级',relatedPhase:'',relatedSubPhase:'',dateRange:{start:'2026-07-30',end:'2026-09-19'},isMockExam:false});
+  add({name:'选择题碎片刷题',durationMinutes:30,weight:20,difficulty:'低',tags:['碎片友好'],subject:'',stage:'二级',relatedPhase:'',relatedSubPhase:'',dateRange:{start:'2026-07-30',end:'2026-09-19'},isMockExam:false});
+  add({name:'全真套题模考',durationMinutes:120,weight:0,difficulty:'高',tags:['模考'],subject:'',stage:'二级',relatedPhase:'',relatedSubPhase:'',dateRange:{start:'2026-07-30',end:'2026-09-19'},isMockExam:true});
+  add({name:'弹性学习',durationMinutes:0,difficulty:'低',tags:['弹性'],subject:'',stage:'二级',relatedPhase:'',relatedSubPhase:'',dateRange:{start:'2026-07-30',end:'2026-09-19'},isMockExam:false,elastic:true});
+
+  // 四级 Phase 1
+  add({name:'听单词课',durationMinutes:55,difficulty:'中',tags:['词汇'],subject:'',stage:'四级',relatedPhase:'phase1',relatedSubPhase:'基础阶段',dateRange:{start:'2026-09-20',end:'2026-10-20'},isMockExam:false});
+  add({name:'做题听力',durationMinutes:65,difficulty:'中',tags:['听力'],subject:'',stage:'四级',relatedPhase:'phase1',relatedSubPhase:'基础阶段',dateRange:{start:'2026-09-20',end:'2026-10-20'},isMockExam:false});
+  add({name:'70min三步（听力）',durationMinutes:70,difficulty:'高',tags:['听力','三步法'],subject:'',stage:'四级',relatedPhase:'phase1',relatedSubPhase:'基础阶段',dateRange:{start:'2026-09-20',end:'2026-10-20'},isMockExam:false});
+  add({name:'做题阅读',durationMinutes:65,difficulty:'中',tags:['阅读'],subject:'',stage:'四级',relatedPhase:'phase1',relatedSubPhase:'基础阶段',dateRange:{start:'2026-09-20',end:'2026-10-20'},isMockExam:false});
+  add({name:'70min三步（阅读）',durationMinutes:70,difficulty:'高',tags:['阅读','三步法'],subject:'',stage:'四级',relatedPhase:'phase1',relatedSubPhase:'基础阶段',dateRange:{start:'2026-09-20',end:'2026-10-20'},isMockExam:false});
+  // 四级 Phase 2
+  add({name:'四级题型方法课',durationMinutes:55,difficulty:'中',tags:['方法'],subject:'',stage:'四级',relatedPhase:'phase2',relatedSubPhase:'强化阶段',dateRange:{start:'2026-10-21',end:'2026-11-25'},isMockExam:false});
+  add({name:'对应题型练习',durationMinutes:65,difficulty:'中',tags:['练习'],subject:'',stage:'四级',relatedPhase:'phase2',relatedSubPhase:'强化阶段',dateRange:{start:'2026-10-21',end:'2026-11-25'},isMockExam:false});
+  add({name:'70min复盘',durationMinutes:70,difficulty:'高',tags:['复盘','三步法'],subject:'',stage:'四级',relatedPhase:'phase2',relatedSubPhase:'强化阶段',dateRange:{start:'2026-10-21',end:'2026-11-25'},isMockExam:false});
+  // 四级 Phase 3
+  add({name:'四级套卷模考',durationMinutes:120,difficulty:'高',tags:['模考'],subject:'',stage:'四级',relatedPhase:'phase3',relatedSubPhase:'冲刺阶段',dateRange:{start:'2026-11-26',end:'2026-12-12'},isMockExam:true});
+  add({name:'旧套卷二刷错题',durationMinutes:65,difficulty:'中',tags:['错题'],subject:'',stage:'四级',relatedPhase:'phase3',relatedSubPhase:'冲刺阶段',dateRange:{start:'2026-11-26',end:'2026-12-12'},isMockExam:false});
+  add({name:'弹性学习',durationMinutes:0,difficulty:'低',tags:['弹性'],subject:'',stage:'四级',relatedPhase:'',relatedSubPhase:'',dateRange:{start:'2026-09-20',end:'2026-12-12'},isMockExam:false,elastic:true});
+
+  // 六级 Phase 1
+  add({name:'听六级单词课',durationMinutes:55,difficulty:'中',tags:['词汇'],subject:'',stage:'六级',relatedPhase:'phase1',relatedSubPhase:'基础阶段',dateRange:{start:'2027-03-01',end:'2027-04-02'},isMockExam:false});
+  add({name:'做题听力',durationMinutes:65,difficulty:'中',tags:['听力'],subject:'',stage:'六级',relatedPhase:'phase1',relatedSubPhase:'基础阶段',dateRange:{start:'2027-03-01',end:'2027-04-02'},isMockExam:false});
+  add({name:'70min三步复盘（听力）',durationMinutes:70,difficulty:'高',tags:['听力','三步法'],subject:'',stage:'六级',relatedPhase:'phase1',relatedSubPhase:'基础阶段',dateRange:{start:'2027-03-01',end:'2027-04-02'},isMockExam:false});
+  add({name:'做题阅读',durationMinutes:65,difficulty:'中',tags:['阅读'],subject:'',stage:'六级',relatedPhase:'phase1',relatedSubPhase:'基础阶段',dateRange:{start:'2027-03-01',end:'2027-04-02'},isMockExam:false});
+  add({name:'70min三步复盘（阅读）',durationMinutes:70,difficulty:'高',tags:['阅读','三步法'],subject:'',stage:'六级',relatedPhase:'phase1',relatedSubPhase:'基础阶段',dateRange:{start:'2027-03-01',end:'2027-04-02'},isMockExam:false});
+  // 六级 Phase 2
+  add({name:'六级题型方法课',durationMinutes:55,difficulty:'中',tags:['方法'],subject:'',stage:'六级',relatedPhase:'phase2',relatedSubPhase:'强化阶段',dateRange:{start:'2027-04-03',end:'2027-05-18'},isMockExam:false});
+  add({name:'对应题型练习',durationMinutes:65,difficulty:'中',tags:['练习'],subject:'',stage:'六级',relatedPhase:'phase2',relatedSubPhase:'强化阶段',dateRange:{start:'2027-04-03',end:'2027-05-18'},isMockExam:false});
+  add({name:'70min复盘',durationMinutes:70,difficulty:'高',tags:['复盘','三步法'],subject:'',stage:'六级',relatedPhase:'phase2',relatedSubPhase:'强化阶段',dateRange:{start:'2027-04-03',end:'2027-05-18'},isMockExam:false});
+  // 六级 Phase 3
+  add({name:'六级套卷模考',durationMinutes:130,difficulty:'高',tags:['模考'],subject:'',stage:'六级',relatedPhase:'phase3',relatedSubPhase:'冲刺阶段',dateRange:{start:'2027-05-19',end:'2027-06-12'},isMockExam:true});
+  add({name:'旧套卷二刷错题',durationMinutes:65,difficulty:'中',tags:['错题'],subject:'',stage:'六级',relatedPhase:'phase3',relatedSubPhase:'冲刺阶段',dateRange:{start:'2027-05-19',end:'2027-06-12'},isMockExam:false});
+  add({name:'套卷深度复盘',durationMinutes:70,difficulty:'高',tags:['复盘'],subject:'',stage:'六级',relatedPhase:'phase3',relatedSubPhase:'冲刺阶段',dateRange:{start:'2027-05-19',end:'2027-06-12'},isMockExam:false});
+  add({name:'弹性学习',durationMinutes:0,difficulty:'低',tags:['弹性'],subject:'',stage:'六级',relatedPhase:'',relatedSubPhase:'',dateRange:{start:'2027-03-01',end:'2027-06-12'},isMockExam:false,elastic:true});
+
+  // 专升本 Phase 1
+  add({name:'阅读刷题',durationMinutes:45,difficulty:'中',tags:[],subject:'英语',stage:'专升本',relatedPhase:'phase1',relatedSubPhase:'基础搭建',dateRange:{start:'2027-06-15',end:'2027-09-30'},isMockExam:false});
+  add({name:'写作+翻译刷题',durationMinutes:45,difficulty:'中',tags:[],subject:'英语',stage:'专升本',relatedPhase:'phase1',relatedSubPhase:'基础搭建',dateRange:{start:'2027-06-15',end:'2027-09-30'},isMockExam:false});
+  add({name:'听力+单选刷题',durationMinutes:45,difficulty:'中',tags:[],subject:'英语',stage:'专升本',relatedPhase:'phase1',relatedSubPhase:'基础搭建',dateRange:{start:'2027-06-15',end:'2027-09-30'},isMockExam:false});
+  add({name:'三步复盘（英语）',durationMinutes:30,difficulty:'高',tags:['三步法'],subject:'英语',stage:'专升本',relatedPhase:'phase1',relatedSubPhase:'基础搭建',dateRange:{start:'2027-06-15',end:'2027-09-30'},isMockExam:false});
+  add({name:'错题内生词、长难句整理复盘',durationMinutes:5,difficulty:'低',tags:['复盘'],subject:'英语',stage:'专升本',relatedPhase:'phase1',relatedSubPhase:'基础搭建',dateRange:{start:'2027-06-15',end:'2027-09-30'},isMockExam:false});
+  add({name:'课程学习',durationMinutes:50,difficulty:'中',tags:[],subject:'语文',stage:'专升本',relatedPhase:'phase1',relatedSubPhase:'基础搭建',dateRange:{start:'2027-06-15',end:'2027-09-30'},isMockExam:false});
+  add({name:'对应内容刷题',durationMinutes:45,difficulty:'中',tags:[],subject:'语文',stage:'专升本',relatedPhase:'phase1',relatedSubPhase:'基础搭建',dateRange:{start:'2027-06-15',end:'2027-09-30'},isMockExam:false});
+  add({name:'三步复盘（语文）',durationMinutes:25,difficulty:'高',tags:['三步法'],subject:'语文',stage:'专升本',relatedPhase:'phase1',relatedSubPhase:'基础搭建',dateRange:{start:'2027-06-15',end:'2027-09-30'},isMockExam:false});
+  add({name:'文言实词、文学常识错题复盘',durationMinutes:5,difficulty:'低',tags:['复盘'],subject:'语文',stage:'专升本',relatedPhase:'phase1',relatedSubPhase:'基础搭建',dateRange:{start:'2027-06-15',end:'2027-09-30'},isMockExam:false});
+  add({name:'听课学习',durationMinutes:50,difficulty:'中',tags:[],subject:'计算机',stage:'专升本',relatedPhase:'phase1',relatedSubPhase:'基础搭建',dateRange:{start:'2027-06-15',end:'2027-09-30'},isMockExam:false});
+  add({name:'对应内容刷题',durationMinutes:45,difficulty:'中',tags:[],subject:'计算机',stage:'专升本',relatedPhase:'phase1',relatedSubPhase:'基础搭建',dateRange:{start:'2027-06-15',end:'2027-09-30'},isMockExam:false});
+  add({name:'三步复盘（计算机）',durationMinutes:30,difficulty:'高',tags:['三步法'],subject:'计算机',stage:'专升本',relatedPhase:'phase1',relatedSubPhase:'基础搭建',dateRange:{start:'2027-06-15',end:'2027-09-30'},isMockExam:false});
+  // 专升本 Phase 2
+  add({name:'阅读刷题',durationMinutes:45,difficulty:'中',tags:[],subject:'英语',stage:'专升本',relatedPhase:'phase2',relatedSubPhase:'专项强化',dateRange:{start:'2027-10-01',end:'2028-02-28'},isMockExam:false});
+  add({name:'写作+翻译刷题',durationMinutes:45,difficulty:'中',tags:[],subject:'英语',stage:'专升本',relatedPhase:'phase2',relatedSubPhase:'专项强化',dateRange:{start:'2027-10-01',end:'2028-02-28'},isMockExam:false});
+  add({name:'听力+单选刷题',durationMinutes:45,difficulty:'中',tags:[],subject:'英语',stage:'专升本',relatedPhase:'phase2',relatedSubPhase:'专项强化',dateRange:{start:'2027-10-01',end:'2028-02-28'},isMockExam:false});
+  add({name:'三步复盘（英语）',durationMinutes:30,difficulty:'高',tags:['三步法'],subject:'英语',stage:'专升本',relatedPhase:'phase2',relatedSubPhase:'专项强化',dateRange:{start:'2027-10-01',end:'2028-02-28'},isMockExam:false});
+  add({name:'错题内生词、长难句整理复盘',durationMinutes:5,difficulty:'低',tags:['复盘'],subject:'英语',stage:'专升本',relatedPhase:'phase2',relatedSubPhase:'专项强化',dateRange:{start:'2027-10-01',end:'2028-02-28'},isMockExam:false});
+  add({name:'（单选+多选+简答）×3 刷题',durationMinutes:100,difficulty:'高',tags:['刷题'],subject:'语文',stage:'专升本',relatedPhase:'phase2',relatedSubPhase:'专项强化',dateRange:{start:'2027-10-01',end:'2028-02-28'},isMockExam:false});
+  add({name:'（古诗文+现代文+文言文）×3 刷题',durationMinutes:90,difficulty:'高',tags:['刷题'],subject:'语文',stage:'专升本',relatedPhase:'phase2',relatedSubPhase:'专项强化',dateRange:{start:'2027-10-01',end:'2028-02-28'},isMockExam:false});
+  add({name:'写作练习 ×2 刷题',durationMinutes:110,difficulty:'高',tags:['刷题'],subject:'语文',stage:'专升本',relatedPhase:'phase2',relatedSubPhase:'专项强化',dateRange:{start:'2027-10-01',end:'2028-02-28'},isMockExam:false});
+  add({name:'三步复盘（语文）',durationMinutes:25,difficulty:'高',tags:['三步法'],subject:'语文',stage:'专升本',relatedPhase:'phase2',relatedSubPhase:'专项强化',dateRange:{start:'2027-10-01',end:'2028-02-28'},isMockExam:false});
+  add({name:'古诗文、答题模板错题复盘',durationMinutes:5,difficulty:'低',tags:['复盘'],subject:'语文',stage:'专升本',relatedPhase:'phase2',relatedSubPhase:'专项强化',dateRange:{start:'2027-10-01',end:'2028-02-28'},isMockExam:false});
+  add({name:'应用题专项刷题',durationMinutes:120,difficulty:'高',tags:['刷题'],subject:'计算机',stage:'专升本',relatedPhase:'phase2',relatedSubPhase:'专项强化',dateRange:{start:'2027-10-01',end:'2028-02-28'},isMockExam:false});
+  add({name:'单选+判断+填空专项刷题',durationMinutes:80,difficulty:'中',tags:['刷题'],subject:'计算机',stage:'专升本',relatedPhase:'phase2',relatedSubPhase:'专项强化',dateRange:{start:'2027-10-01',end:'2028-02-28'},isMockExam:false});
+  add({name:'三步复盘（计算机）',durationMinutes:25,difficulty:'高',tags:['三步法'],subject:'计算机',stage:'专升本',relatedPhase:'phase2',relatedSubPhase:'专项强化',dateRange:{start:'2027-10-01',end:'2028-02-28'},isMockExam:false});
+  add({name:'单选高频、易混考点错题复盘',durationMinutes:5,difficulty:'低',tags:['复盘'],subject:'计算机',stage:'专升本',relatedPhase:'phase2',relatedSubPhase:'专项强化',dateRange:{start:'2027-10-01',end:'2028-02-28'},isMockExam:false});
+  // 专升本 Phase 3
+  add({name:'全真限时模拟考试',durationMinutes:120,difficulty:'高',tags:['模考'],subject:'英语',stage:'专升本',relatedPhase:'phase3',relatedSubPhase:'全真冲刺',dateRange:{start:'2028-03-01',end:'2028-03-21'},isMockExam:true});
+  add({name:'套卷深度复盘',durationMinutes:45,difficulty:'高',tags:['复盘'],subject:'英语',stage:'专升本',relatedPhase:'phase3',relatedSubPhase:'全真冲刺',dateRange:{start:'2028-03-01',end:'2028-03-21'},isMockExam:false});
+  add({name:'错题回看、作文素材复盘整理',durationMinutes:5,difficulty:'低',tags:['复盘'],subject:'英语',stage:'专升本',relatedPhase:'phase3',relatedSubPhase:'全真冲刺',dateRange:{start:'2028-03-01',end:'2028-03-21'},isMockExam:false});
+  add({name:'全真限时模拟考试',durationMinutes:120,difficulty:'高',tags:['模考'],subject:'语文',stage:'专升本',relatedPhase:'phase3',relatedSubPhase:'全真冲刺',dateRange:{start:'2028-03-01',end:'2028-03-21'},isMockExam:true});
+  add({name:'套卷深度复盘',durationMinutes:45,difficulty:'高',tags:['复盘'],subject:'语文',stage:'专升本',relatedPhase:'phase3',relatedSubPhase:'全真冲刺',dateRange:{start:'2028-03-01',end:'2028-03-21'},isMockExam:false});
+  add({name:'错题本整体复盘回顾',durationMinutes:5,difficulty:'低',tags:['复盘'],subject:'语文',stage:'专升本',relatedPhase:'phase3',relatedSubPhase:'全真冲刺',dateRange:{start:'2028-03-01',end:'2028-03-21'},isMockExam:false});
+  add({name:'全真限时模拟考试',durationMinutes:120,difficulty:'高',tags:['模考'],subject:'计算机',stage:'专升本',relatedPhase:'phase3',relatedSubPhase:'全真冲刺',dateRange:{start:'2028-03-01',end:'2028-03-21'},isMockExam:true});
+  add({name:'套卷深度复盘',durationMinutes:45,difficulty:'高',tags:['复盘'],subject:'计算机',stage:'专升本',relatedPhase:'phase3',relatedSubPhase:'全真冲刺',dateRange:{start:'2028-03-01',end:'2028-03-21'},isMockExam:false});
+  add({name:'全部旧错题复盘回顾',durationMinutes:5,difficulty:'低',tags:['复盘'],subject:'计算机',stage:'专升本',relatedPhase:'phase3',relatedSubPhase:'全真冲刺',dateRange:{start:'2028-03-01',end:'2028-03-21'},isMockExam:false});
+  add({name:'弹性学习',durationMinutes:0,difficulty:'低',tags:['弹性'],subject:'',stage:'专升本',relatedPhase:'',relatedSubPhase:'',dateRange:{start:'2027-06-15',end:'2028-03-21'},isMockExam:false,elastic:true});
+
+  // CPA Phase 1
+  add({name:'听课学习',durationMinutes:110,difficulty:'高',tags:[],subject:'会计',stage:'CPA',relatedPhase:'phase1',relatedSubPhase:'基础阶段',dateRange:{start:'2028-03-25',end:'2028-06-30'},isMockExam:false});
+  add({name:'章节刷题（客观题）',durationMinutes:75,difficulty:'中',tags:[],subject:'会计',stage:'CPA',relatedPhase:'phase1',relatedSubPhase:'基础阶段',dateRange:{start:'2028-03-25',end:'2028-06-30'},isMockExam:false});
+  add({name:'三步复盘（会计）',durationMinutes:30,difficulty:'高',tags:['三步法'],subject:'会计',stage:'CPA',relatedPhase:'phase1',relatedSubPhase:'基础阶段',dateRange:{start:'2028-03-25',end:'2028-06-30'},isMockExam:false});
+  add({name:'分录/框架整理',durationMinutes:5,difficulty:'低',tags:['复盘'],subject:'会计',stage:'CPA',relatedPhase:'phase1',relatedSubPhase:'基础阶段',dateRange:{start:'2028-03-25',end:'2028-06-30'},isMockExam:false});
+  add({name:'听课学习',durationMinutes:45,difficulty:'中',tags:[],subject:'战略',stage:'CPA',relatedPhase:'phase1',relatedSubPhase:'基础阶段',dateRange:{start:'2028-03-25',end:'2028-06-30'},isMockExam:false});
+  add({name:'章节刷题（客观题）',durationMinutes:40,difficulty:'中',tags:[],subject:'战略',stage:'CPA',relatedPhase:'phase1',relatedSubPhase:'基础阶段',dateRange:{start:'2028-03-25',end:'2028-06-30'},isMockExam:false});
+  add({name:'三步复盘（战略）',durationMinutes:20,difficulty:'高',tags:['三步法'],subject:'战略',stage:'CPA',relatedPhase:'phase1',relatedSubPhase:'基础阶段',dateRange:{start:'2028-03-25',end:'2028-06-30'},isMockExam:false});
+  add({name:'章节框架思维导图默写',durationMinutes:5,difficulty:'低',tags:['复盘'],subject:'战略',stage:'CPA',relatedPhase:'phase1',relatedSubPhase:'基础阶段',dateRange:{start:'2028-03-25',end:'2028-06-30'},isMockExam:false});
+  // CPA Phase 2
+  add({name:'客观题限时刷题',durationMinutes:35,difficulty:'中',tags:['刷题'],subject:'会计',stage:'CPA',relatedPhase:'phase2',relatedSubPhase:'专项强化',dateRange:{start:'2028-07-01',end:'2028-07-31'},isMockExam:false});
+  add({name:'主观题专题突破',durationMinutes:70,difficulty:'高',tags:['刷题'],subject:'会计',stage:'CPA',relatedPhase:'phase2',relatedSubPhase:'专项强化',dateRange:{start:'2028-07-01',end:'2028-07-31'},isMockExam:false});
+  add({name:'三步复盘（会计）',durationMinutes:30,difficulty:'高',tags:['三步法'],subject:'会计',stage:'CPA',relatedPhase:'phase2',relatedSubPhase:'专项强化',dateRange:{start:'2028-07-01',end:'2028-07-31'},isMockExam:false});
+  add({name:'分录模板整理',durationMinutes:5,difficulty:'低',tags:['复盘'],subject:'会计',stage:'CPA',relatedPhase:'phase2',relatedSubPhase:'专项强化',dateRange:{start:'2028-07-01',end:'2028-07-31'},isMockExam:false});
+  add({name:'客观题限时刷题',durationMinutes:20,difficulty:'中',tags:['刷题'],subject:'战略',stage:'CPA',relatedPhase:'phase2',relatedSubPhase:'专项强化',dateRange:{start:'2028-07-01',end:'2028-07-31'},isMockExam:false});
+  add({name:'主观题案例训练',durationMinutes:45,difficulty:'高',tags:['刷题'],subject:'战略',stage:'CPA',relatedPhase:'phase2',relatedSubPhase:'专项强化',dateRange:{start:'2028-07-01',end:'2028-07-31'},isMockExam:false});
+  add({name:'三步复盘（战略）',durationMinutes:25,difficulty:'高',tags:['三步法'],subject:'战略',stage:'CPA',relatedPhase:'phase2',relatedSubPhase:'专项强化',dateRange:{start:'2028-07-01',end:'2028-07-31'},isMockExam:false});
+  add({name:'核心模型关键词默写',durationMinutes:5,difficulty:'低',tags:['复盘'],subject:'战略',stage:'CPA',relatedPhase:'phase2',relatedSubPhase:'专项强化',dateRange:{start:'2028-07-01',end:'2028-07-31'},isMockExam:false});
+  // CPA Phase 3
+  add({name:'全真限时机考模拟',durationMinutes:180,difficulty:'高',tags:['模考'],subject:'会计',stage:'CPA',relatedPhase:'phase3',relatedSubPhase:'全真冲刺',dateRange:{start:'2028-08-01',end:'2028-08-22'},isMockExam:true});
+  add({name:'套卷深度复盘',durationMinutes:45,difficulty:'高',tags:['复盘'],subject:'会计',stage:'CPA',relatedPhase:'phase3',relatedSubPhase:'全真冲刺',dateRange:{start:'2028-08-01',end:'2028-08-22'},isMockExam:false});
+  add({name:'旧错题终极回顾',durationMinutes:5,difficulty:'低',tags:['复盘'],subject:'会计',stage:'CPA',relatedPhase:'phase3',relatedSubPhase:'全真冲刺',dateRange:{start:'2028-08-01',end:'2028-08-22'},isMockExam:false});
+  add({name:'全真限时机考模拟',durationMinutes:120,difficulty:'高',tags:['模考'],subject:'战略',stage:'CPA',relatedPhase:'phase3',relatedSubPhase:'全真冲刺',dateRange:{start:'2028-08-01',end:'2028-08-22'},isMockExam:true});
+  add({name:'套卷深度复盘',durationMinutes:45,difficulty:'高',tags:['复盘'],subject:'战略',stage:'CPA',relatedPhase:'phase3',relatedSubPhase:'全真冲刺',dateRange:{start:'2028-08-01',end:'2028-08-22'},isMockExam:false});
+  add({name:'旧错题终极回顾',durationMinutes:5,difficulty:'低',tags:['复盘'],subject:'战略',stage:'CPA',relatedPhase:'phase3',relatedSubPhase:'全真冲刺',dateRange:{start:'2028-08-01',end:'2028-08-22'},isMockExam:false});
+  add({name:'弹性学习',durationMinutes:0,difficulty:'低',tags:['弹性'],subject:'',stage:'CPA',relatedPhase:'',relatedSubPhase:'',dateRange:{start:'2028-03-25',end:'2028-08-22'},isMockExam:false,elastic:true});
+
+  return t;
+}
+
+// ========== STATE ==========
+const STORAGE_KEY='grit_data';
+let state={
+  taskStates:{},customRecords:[],mockScores:[],consecutiveDays:0,
+  lastActiveDate:'',lowEfficiencyDismissedToday:false,focusTimer:null,
+  currentStage:'',currentTab:'',subPhaseTab:{}
+};
+
+function loadState(){
+  try{const raw=localStorage.getItem(STORAGE_KEY);if(raw){const s=JSON.parse(raw);return{...state,...s}}}
+  catch(e){console.warn('State load failed')}
+  return JSON.parse(JSON.stringify(state));
+}
+function saveState(){
+  state.lastActiveDate=getTodayStr();
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
+}
+function initTaskStates(){
+  const templates=getTaskTemplates();
+  const newStates={};
+  templates.forEach(t=>{
+    if(state.taskStates[t.id]){newStates[t.id]={...state.taskStates[t.id]}}
+    else{newStates[t.id]={isCompletedToday:false,isSelected:false,focusElapsedMinutes:0,completedAt:null,completedManually:false}}
+  });
+  state.taskStates=newStates;
+}
+
+// ========== UTILS ==========
+function getTodayStr(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function getYesterdayStr(){const d=new Date();d.setDate(d.getDate()-1);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function parseDate(str){const p=str.split('-');return new Date(+p[0],+p[1]-1,+p[2])}
+function isInRange(dateStr,range){return dateStr>=range.start&&dateStr<=range.end}
+function formatMin(m){if(m>=60){const h=Math.floor(m/60),r=m%60;return r>0?h+'h'+r+'min':h+'h'}return m+'min'}
+function isToday(dateStr){return dateStr===getTodayStr()}
+function isYesterday(dateStr){return dateStr===getYesterdayStr()}
+
+function getStageConfig(stageId){return STAGES.find(s=>s.id===stageId)}
+function getCurrentStageAndSubPhase(){
+  const today=getTodayStr();
+  for(const s of STAGES){if(isInRange(today,s)){if(!s.hasSubPhase)return{stage:s,subPhase:null};for(const sp of s.subPhases){if(isInRange(today,sp))return{stage:s,subPhase:sp}}return{stage:s,subPhase:null}}}
+  return{stage:null,subPhase:null};
+}
+
+function getTasksForStage(stageId,subPhaseId){
+  const templates=getTaskTemplates();const today=getTodayStr();
+  const cfg=getStageConfig(stageId);if(!cfg)return[];
+  let filtered;
+  if(isInRange(today,cfg)){
+    filtered=templates.filter(t=>t.stage===stageId&&isInRange(today,t.dateRange));
+  }else{
+    filtered=templates.filter(t=>t.stage===stageId);
+  }
+  if(cfg.hasSubPhase&&subPhaseId){
+    filtered=filtered.filter(t=>t.relatedPhase===subPhaseId||!t.relatedPhase);
+  }
+  return filtered;
+}
+
+function getDefaultSubPhase(stageId){
+  const cfg=getStageConfig(stageId);
+  if(!cfg||!cfg.hasSubPhase)return null;
+  const today=getTodayStr();
+  for(const sp of cfg.subPhases){if(isInRange(today,sp))return sp.id;}
+  return cfg.subPhases[0].id;
+}
+
+function switchSubPhase(stageId,subPhaseId){
+  if(!state.subPhaseTab)state.subPhaseTab={};
+  state.subPhaseTab[stageId]=subPhaseId;
+  saveState();renderAll();
+}
+
+function getTaskTemplate(taskId){return getTaskTemplates().find(t=>t.id===taskId)}
+function getTaskState(taskId){return state.taskStates[taskId]||{isCompletedToday:false,isSelected:false,focusElapsedMinutes:0,completedAt:null,completedManually:false}}
+function getTaskProgressMin(taskId){
+  const ts=getTaskState(taskId);const tpl=getTaskTemplate(taskId);
+  if(!tpl||tpl.noCount)return 0;
+  if(ts.isCompletedToday)return Math.max(ts.focusElapsedMinutes||0,tpl.durationMinutes);
+  return ts.focusElapsedMinutes||0;
+}
+
+// ========== DAILY RESET ==========
+function checkDailyReset(){
+  const today=getTodayStr();
+  if(state.lastActiveDate!==today){
+    Object.keys(state.taskStates).forEach(tid=>{
+      const ts=state.taskStates[tid];const tpl=getTaskTemplate(tid);
+      if(ts.isCompletedToday&&(!tpl||!tpl.elastic))ts.focusElapsedMinutes=0;
+      ts.isCompletedToday=false;
+      ts.isSelected=false;
+    });
+    state.lowEfficiencyDismissedToday=false;
+    state.lastActiveDate=today;
+    saveState();
+  }
+  checkConsecutiveDays();
+}
+
+// ========== CONSECUTIVE DAYS ==========
+function checkConsecutiveDays(){
+  const today=getTodayStr();
+  const completedDates=new Set();
+  Object.keys(state.taskStates).forEach(tid=>{
+    const ts=state.taskStates[tid];
+    if(ts.completedAt){
+      const d=new Date(ts.completedAt);completedDates.add(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'));
+    }
+  });
+  // Custom records do NOT count toward consecutive days
+  let streak=0;const d=new Date();
+  while(true){
+    const ds=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    if(completedDates.has(ds)){streak++;d.setDate(d.getDate()-1)}
+    else break;
+  }
+  if(completedDates.has(today)){state.consecutiveDays=streak}
+  else{state.consecutiveDays=Math.max(0,streak)}
+  saveState();
+}
+
+// ========== LOW EFFICIENCY ==========
+function checkLowEfficiency(){
+  if(state.lowEfficiencyDismissedToday)return;
+  const yesterday=getYesterdayStr();
+  const dayBefore=new Date();dayBefore.setDate(dayBefore.getDate()-2);
+  const dbStr=dayBefore.getFullYear()+'-'+String(dayBefore.getMonth()+1).padStart(2,'0')+'-'+String(dayBefore.getDate()).padStart(2,'0');
+  let hasYesterday=false,hasDayBefore=false;
+  Object.keys(state.taskStates).forEach(tid=>{
+    const ts=state.taskStates[tid];
+    if(ts.completedAt){
+      const cd=new Date(ts.completedAt);const cds=cd.getFullYear()+'-'+String(cd.getMonth()+1).padStart(2,'0')+'-'+String(cd.getDate()).padStart(2,'0');
+      if(cds===yesterday)hasYesterday=true;
+      if(cds===dbStr)hasDayBefore=true;
+    }
+  });
+  // Custom records do NOT count for low efficiency detection
+  if(!hasYesterday&&!hasDayBefore&&state.consecutiveDays===0){
+    document.getElementById('low-banner').classList.add('show');
+  }
+}
+
+function dismissLowBanner(){document.getElementById('low-banner').classList.remove('show');state.lowEfficiencyDismissedToday=true;saveState()}
+function goToTaskPool(){dismissLowBanner();window.scrollTo({top:document.getElementById('task-pool').offsetTop-80,behavior:'smooth'})}
+
+// ========== POMODORO ==========
+let pomodoroInterval=null;
+let pomodoroAutoPaused=false;
+let pomodoroData={taskId:null,remaining:0,total:0,elapsedBefore:0,countUp:false};
+
+function startPomodoro(taskId){
+  const tpl=getTaskTemplate(taskId);const ts=getTaskState(taskId);
+  if(tpl.elastic){
+    const elapsed=ts.focusElapsedMinutes*60;
+    pomodoroData={taskId,remaining:0,total:-1,elapsedBefore:elapsed,countUp:true};
+    document.getElementById('pomo-task-label').textContent=tpl.name+' (弹性·正计时)';
+  }else{
+    const total=tpl.durationMinutes*60;
+    const elapsed=ts.focusElapsedMinutes*60;
+    const remaining=total-elapsed;
+    if(remaining<=0){completeTask(taskId);return}
+    pomodoroData={taskId,remaining,total,elapsedBefore:elapsed,countUp:false};
+    document.getElementById('pomo-task-label').textContent=tpl.name+' ('+tpl.durationMinutes+'min)';
+  }
+  updatePomodoroDisplay();
+  document.getElementById('pomodoro-overlay').classList.add('show');
+  document.getElementById('pomo-pause-btn').textContent='⏸️';
+  document.querySelector('.pomodoro-dialog .tomato').classList.remove('paused');
+  if(pomodoroInterval)clearInterval(pomodoroInterval);
+  pomodoroInterval=setInterval(tickPomodoro,1000);
+  document.getElementById('pomo-pause-btn').style.display='';
+  saveState();
+}
+
+function tickPomodoro(){
+  if(pomodoroData.countUp){pomodoroData.remaining++}
+  else{pomodoroData.remaining--}
+  updatePomodoroDisplay();
+  if(!pomodoroData.countUp&&pomodoroData.remaining<=0){
+    clearInterval(pomodoroInterval);pomodoroInterval=null;
+    document.getElementById('pomodoro-overlay').classList.remove('show');
+    completeTask(pomodoroData.taskId);
+    pomodoroData.taskId=null;
+    notifyPomodoroEnd();
+  }
+}
+
+function updatePomodoroDisplay(){
+  const r=pomodoroData.countUp?pomodoroData.remaining:Math.max(0,pomodoroData.remaining);
+  const m=Math.floor(r/60);const s=r%60;
+  const prefix=pomodoroData.countUp?'+':'';
+  document.getElementById('pomo-timer').textContent=prefix+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+}
+
+function togglePomodoroPause(){
+  if(pomodoroInterval){clearInterval(pomodoroInterval);pomodoroInterval=null;document.getElementById('pomo-pause-btn').textContent='▶️';document.querySelector('.pomodoro-dialog .tomato').classList.add('paused')}
+  else{pomodoroInterval=setInterval(tickPomodoro,1000);document.getElementById('pomo-pause-btn').textContent='⏸️';document.querySelector('.pomodoro-dialog .tomato').classList.remove('paused')}
+}
+
+function notifyPomodoroEnd(){
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    const o=ctx.createOscillator();const g=ctx.createGain();
+    o.connect(g);g.connect(ctx.destination);
+    o.type='sine';o.frequency.setValueAtTime(880,ctx.currentTime);
+    o.frequency.setValueAtTime(660,ctx.currentTime+0.15);
+    g.gain.setValueAtTime(0.3,ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.01,ctx.currentTime+0.4);
+    o.start(ctx.currentTime);o.stop(ctx.currentTime+0.4);
+    if(navigator.vibrate)navigator.vibrate([200,100,200]);
+  }catch(e){}
+  startRest();
+}
+
+// ====== Rest Timer ======
+let restInterval=null;
+let restRemaining=300; // 5 minutes
+
+function startRest(){
+  restRemaining=300;
+  updateRestDisplay();
+  document.getElementById('rest-overlay').style.display='flex';
+  if(restInterval)clearInterval(restInterval);
+  restInterval=setInterval(tickRest,1000);
+}
+
+function tickRest(){
+  restRemaining--;
+  updateRestDisplay();
+  if(restRemaining<=0){
+    clearInterval(restInterval);restInterval=null;
+    document.getElementById('rest-overlay').style.display='none';
+  }
+}
+
+function skipRest(){
+  clearInterval(restInterval);restInterval=null;
+  document.getElementById('rest-overlay').style.display='none';
+}
+
+function updateRestDisplay(){
+  const m=Math.floor(restRemaining/60);const s=restRemaining%60;
+  document.getElementById('rest-timer').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+}
+
+function endPomodoroEarly(){
+  document.getElementById('pomo-pause-btn').style.display='none';
+  document.getElementById('early-end-modal').classList.add('show');
+}
+
+function confirmEarlyEnd(){
+  if(pomodoroInterval){clearInterval(pomodoroInterval);pomodoroInterval=null}
+  const elapsedSec=pomodoroData.countUp?pomodoroData.remaining:(pomodoroData.total-pomodoroData.remaining);
+  const elapsedMin=Math.floor(elapsedSec/60);
+  const ts=getTaskState(pomodoroData.taskId);
+  const tpl=getTaskTemplate(pomodoroData.taskId);
+  ts.focusElapsedMinutes=Math.max(ts.focusElapsedMinutes,elapsedMin);
+  ts.completedManually=false;
+  pomodoroData.taskId=null;
+  document.getElementById('pomodoro-overlay').classList.remove('show');
+  document.getElementById('early-end-modal').classList.remove('show');
+  saveState();renderAll();
+}
+
+function cancelEarlyEnd(){
+  document.getElementById('early-end-modal').classList.remove('show');
+  document.getElementById('pomo-pause-btn').style.display='';
+  if(!pomodoroInterval){pomodoroInterval=setInterval(tickPomodoro,1000);document.getElementById('pomo-pause-btn').textContent='⏸️'}
+}
+
+// ========== TASK ACTIONS ==========
+function selectTask(taskId){
+  const ts=getTaskState(taskId);ts.isSelected=true;saveState();renderAll();
+}
+function deselectTask(taskId){
+  const ts=getTaskState(taskId);ts.isSelected=false;saveState();renderAll();
+}
+function startFocus(taskId){
+  const ts=getTaskState(taskId);startPomodoro(taskId);saveState();
+}
+function manualComplete(taskId){
+  const tpl=getTaskTemplate(taskId);const ts=getTaskState(taskId);
+  ts.isCompletedToday=true;ts.completedAt=Date.now();ts.completedManually=true;
+  if(tpl.isMockExam){showMockModal(taskId)}
+  saveState();renderAll();
+}
+
+function completeTask(taskId){
+  const tpl=getTaskTemplate(taskId);const ts=getTaskState(taskId);
+  ts.isCompletedToday=true;ts.completedAt=Date.now();ts.focusElapsedMinutes=tpl.durationMinutes;ts.completedManually=false;
+  if(tpl.isMockExam){showMockModal(taskId)}
+  saveState();renderAll();
+}
+
+function undoTask(taskId){
+  const tpl=getTaskTemplate(taskId);const ts=getTaskState(taskId);
+  ts.isCompletedToday=false;ts.completedAt=null;ts.completedManually=false;
+  if(tpl.isMockExam){
+    const idx=state.mockScores.findIndex(s=>s.taskId===taskId&&isToday(new Date(s.timestamp).toISOString().slice(0,10)));
+    if(idx>=0)state.mockScores.splice(idx,1);
+  }
+  saveState();renderAll();
+}
+
+// ========== MOCK EXAM ==========
+let pendingMockTaskId=null;
+function showMockModal(taskId){pendingMockTaskId=taskId;document.getElementById('mock-task-name').textContent=getTaskTemplate(taskId).name;document.getElementById('mock-score').value='';document.getElementById('mock-modal').classList.add('show')}
+function submitMockScore(){
+  const score=parseInt(document.getElementById('mock-score').value);
+  if(!isNaN(score)&&pendingMockTaskId){
+    const tpl=getTaskTemplate(pendingMockTaskId);
+    state.mockScores.push({taskId:pendingMockTaskId,score,stage:tpl.stage,subject:tpl.subject,timestamp:Date.now()});
+    saveState();
+  }
+  pendingMockTaskId=null;document.getElementById('mock-modal').classList.remove('show');renderAll();
+}
+function skipMockScore(){pendingMockTaskId=null;document.getElementById('mock-modal').classList.remove('show');renderAll()}
+
+// ========== CUSTOM RECORDS ==========
+function toggleCustomRecord(){
+  const el=document.getElementById('custom-record-input');
+  el.style.display=el.style.display==='block'?'none':'block';
+  document.getElementById('custom-record-text').value='';
+}
+function addCustomRecord(){
+  const text=document.getElementById('custom-record-text').value.trim();
+  if(!text)return;
+  state.customRecords.push({id:'cr'+Date.now(),text,date:getTodayStr(),stage:state.currentStage});
+  document.getElementById('custom-record-text').value='';
+  document.getElementById('custom-record-input').style.display='none';
+  saveState();renderAll();
+}
+function deleteCustomRecord(id){state.customRecords=state.customRecords.filter(r=>r.id!==id);saveState();renderAll()}
+
+// ========== RENDER ==========
+function renderAll(){
+  const today=getTodayStr();
+  const {stage:currentStage}=getCurrentStageAndSubPhase();
+  let activeStage=state.currentTab||(currentStage?currentStage.id:'rest');
+  if(!state.currentTab){state.currentTab=activeStage}
+
+  const cfg=getStageConfig(activeStage);
+  let activeSubPhase=null;
+  if(cfg&&cfg.hasSubPhase){
+    activeSubPhase=state.subPhaseTab[activeStage]||getDefaultSubPhase(activeStage);
+    if(!state.subPhaseTab[activeStage]){state.subPhaseTab[activeStage]=activeSubPhase;saveState();}
+  }
+
+  // Header
+  document.getElementById('header-date').textContent='📅 '+today;
+  document.getElementById('header-streak').textContent='🔥 连续'+state.consecutiveDays+'天';
+
+  // Sub-phase bar (inside task pool)
+  const sp=document.getElementById('subphase-bar');
+  if(cfg&&cfg.hasSubPhase&&activeStage!=='rest'){
+    sp.style.display='flex';
+    const phaseIcons={phase1:'①',phase2:'②',phase3:'③'};
+    sp.innerHTML=cfg.subPhases.map(spp=>{
+      const cls=spp.id===activeSubPhase?'subphase-tab active':'subphase-tab';
+      return '<span class="'+cls+'" onclick="switchSubPhase(\''+activeStage+'\',\''+spp.id+'\')" title="'+spp.name+'">'+phaseIcons[spp.id]+'</span>';
+    }).join('');
+  }else{sp.style.display='none'}
+
+  // Focus time
+  let focusTotal=0;
+  if(activeStage!=='rest'&&cfg){
+    Object.keys(state.taskStates).forEach(tid=>{
+      const tpl=getTaskTemplate(tid);const ts=state.taskStates[tid];
+      if(tpl&&tpl.stage===activeStage){
+        if(cfg.hasSubPhase&&activeSubPhase){
+          if(tpl.relatedPhase===activeSubPhase||!tpl.relatedPhase)focusTotal+=ts.focusElapsedMinutes;
+        }else{focusTotal+=ts.focusElapsedMinutes}
+      }
+    });
+  }
+  document.getElementById('header-focus').textContent='⏱️ '+formatMin(focusTotal);
+
+  // Rest screen
+  const main=document.getElementById('main-content');
+  const rest=document.getElementById('rest-screen');
+  if(activeStage==='rest'){
+    main.style.display='none';rest.classList.add('show');
+  }else{
+    main.style.display='';rest.classList.remove('show');
+  }
+
+  // Tab bar
+  document.querySelectorAll('#tab-bar button').forEach(b=>{
+    b.classList.toggle('active',b.dataset.stage===activeStage);
+  });
+
+  if(activeStage==='rest')return;
+
+  // Task pool
+  let tasks=getTasksForStage(activeStage,activeSubPhase);
+  const searchTerm=(document.getElementById('task-search').value||'').trim().toLowerCase();
+  if(searchTerm){tasks=tasks.filter(t=>t.name.toLowerCase().includes(searchTerm)||t.tags.some(tg=>tg.toLowerCase().includes(searchTerm)))}
+  const taskList=document.getElementById('task-list');
+  if(tasks.length===0){
+    taskList.innerHTML='<p style="color:var(--text2);font-size:12px;text-align:center;padding:20px">当前阶段暂无任务</p>';
+  }else{
+    // Sort: selected tasks first, then unselected
+    tasks=[...tasks].sort((a,b)=>{
+      const sa=getTaskState(a.id);const sb=getTaskState(b.id);
+      if(sa.isSelected&&!sb.isSelected)return -1;
+      if(!sa.isSelected&&sb.isSelected)return 1;
+      return 0;
+    });
+    const isFocusing=pomodoroData&&pomodoroData.taskId!==null;
+    taskList.innerHTML=tasks.map(t=>{
+      const ts=getTaskState(t.id);const completed=ts.isCompletedToday;
+      const selected=ts.isSelected;const hasFocus=ts.focusElapsedMinutes>0;
+      const inPomodoro=isFocusing&&pomodoroData.taskId===t.id;
+      let statusClass='';if(completed)statusClass=' completed';else if(selected)statusClass=' selected';
+      let actions='';
+      if(inPomodoro){actions=''}
+      else if(completed){actions='<button class="btn-icon undo" onclick="undoTask(\''+t.id+'\')" title="撤回">❎</button>'}
+      else if(!selected){actions='<button class="btn-icon select" onclick="selectTask(\''+t.id+'\')" title="选择">+</button>'}
+      else if(selected&&!hasFocus){actions='<button class="btn-icon focus" onclick="startFocus(\''+t.id+'\')" title="开始专注">🍅</button><button class="btn-icon done" onclick="manualComplete(\''+t.id+'\')" title="手动完成">✅</button><button class="btn-icon deselect" onclick="deselectTask(\''+t.id+'\')" title="取消选择">✖</button>'}
+      else if(selected&&hasFocus){actions='<button class="btn-icon continue" onclick="startFocus(\''+t.id+'\')" title="继续专注">🔁</button><button class="btn-icon done" onclick="manualComplete(\''+t.id+'\')" title="手动完成">✅</button><button class="btn-icon deselect" onclick="deselectTask(\''+t.id+'\')" title="取消选择">✖</button>'}
+      let tags=t.tags.map(tg=>'<span class="tag'+(tg==='模考'?' mock':'')+'" style="border-radius:50px">'+tg+'</span>').join('');
+      if(t.subject)tags+='<span class="tag" style="border-radius:50px">'+t.subject+'</span>';
+      const diffClass=t.difficulty==='高'?'diff-high':t.difficulty==='中'?'diff-mid':'diff-low';
+      tags+='<span class="tag '+diffClass+'" style="border-radius:50px">'+t.difficulty+'</span>';
+      const durationText=t.elastic?'弹性':t.durationMinutes+'min';
+      return '<div class="task-card'+statusClass+'" style="border-radius:24px"><span class="task-name">'+t.name+'</span><span class="task-meta">'+durationText+'</span><div class="task-tags">'+tags+'</div><div class="task-actions">'+actions+'</div></div>';
+    }).join('');
+  }
+
+  // Done List
+  const yesterday=getYesterdayStr();
+  const yesterdayDone=[],todayDone=[];
+  Object.keys(state.taskStates).forEach(tid=>{
+    const ts=state.taskStates[tid];if(!ts.completedAt)return;
+    const d=new Date(ts.completedAt);const ds=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    const tpl=getTaskTemplate(tid);if(!tpl)return;
+    const timeStr=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+    const entry={name:tpl.name,time:timeStr,stage:tpl.stage,completedManually:ts.completedManually};
+    if(ds===today)todayDone.push(entry);else if(ds===yesterday)yesterdayDone.push(entry);
+  });
+  todayDone.sort((a,b)=>a.time.localeCompare(b.time));
+  yesterdayDone.sort((a,b)=>a.time.localeCompare(b.time));
+  document.getElementById('yesterday-list').innerHTML=yesterdayDone.length===0?'<p style="color:var(--text2);font-size:10px">无记录</p>':yesterdayDone.map(e=>{const label=e.completedManually?'✅ 手动':'⏱️ 专注';return '<div class="done-item" style="border-radius:50px"><span>'+e.name+'</span><span class="time">'+label+' '+e.time+'</span></div>';}).join('');
+  document.getElementById('today-list').innerHTML=(()=>{
+    let html=todayDone.map(e=>{const label=e.completedManually?'✅ 手动':'⏱️ 专注';return '<div class="done-item" style="border-radius:50px"><span>'+e.name+'</span><span class="time">'+label+' '+e.time+'</span></div>';}).join('');
+    const todayCustoms=state.customRecords.filter(r=>r.date===today);
+    todayCustoms.sort((a,b)=>a.id.localeCompare(b.id));
+    html+=todayCustoms.map(r=>'<div class="done-item custom-record" style="border-radius:50px"><span>📝 '+r.text+'</span><span class="time"><button class="del-btn" onclick="deleteCustomRecord(\''+r.id+'\')">&times;</button></span></div>').join('');
+    if(todayDone.length===0&&todayCustoms.length===0)html='<p style="color:var(--text2);font-size:10px">暂无完成</p>';
+    return html;
+  })();
+
+  // Dashboard
+  renderDashboard(activeStage,activeSubPhase);
+}
+
+function renderDashboard(stageId,activeSubPhase){
+  const cfg=getStageConfig(stageId);const today=getTodayStr();
+  if(!cfg){document.getElementById('dashboard').innerHTML='';return}
+  let html='<h3>📊 进度看板</h3>';
+
+  // Countdown
+  const examDate=parseDate(cfg.examDate);const todayDate=parseDate(today);
+  const daysLeft=Math.max(0,Math.ceil((examDate-todayDate)/(1000*60*60*24)));
+  html+='<div class="stat-row"><span class="stat-label">距离考试</span><span class="stat-value">'+daysLeft+'天 ('+cfg.examDate+')</span></div>';
+
+  if(stageId==='二级'){
+    let totalMin=0;
+    Object.keys(state.taskStates).forEach(tid=>{const tpl=getTaskTemplate(tid);if(tpl&&tpl.stage==='二级'){totalMin+=getTaskProgressMin(tid)}});
+    const pct=Math.min(100,(totalMin/cfg.totalMin*100)).toFixed(1);
+    html+='<div class="progress-label"><span>阶段完成度</span><span>'+pct+'%<span class="pct-small">'+formatMin(totalMin)+'/'+formatMin(cfg.totalMin)+'</span></span></div>';
+    html+='<div class="progress-bar" style="border-radius:50px"><div class="fill" style="border-radius:50px;width:'+pct+'%"></div></div>';
+  }else if(stageId==='四级'||stageId==='六级'){
+    const subPhases=cfg.subPhases;
+    let totalDone=0;
+    subPhases.forEach(sp=>{
+      let phaseDone=0;
+      Object.keys(state.taskStates).forEach(tid=>{const tpl=getTaskTemplate(tid);if(tpl&&tpl.stage===stageId&&tpl.relatedPhase===sp.id){phaseDone+=getTaskProgressMin(tid)}});
+      totalDone+=phaseDone;
+      const pct=Math.min(100,(phaseDone/sp.totalMin*100)).toFixed(1);
+      html+='<div class="progress-label"><span>'+sp.name+'</span><span>'+pct+'%<span class="pct-small">'+formatMin(phaseDone)+'/'+formatMin(sp.totalMin)+'</span></span></div>';
+      html+='<div class="progress-bar" style="border-radius:50px"><div class="fill" style="border-radius:50px;width:'+pct+'%"></div></div>';
+    });
+    // Add elastic task progress
+    Object.keys(state.taskStates).forEach(tid=>{const tpl=getTaskTemplate(tid);if(tpl&&tpl.stage===stageId&&tpl.elastic){totalDone+=getTaskProgressMin(tid)}});
+    const totalPct=Math.min(100,(totalDone/cfg.totalMin*100)).toFixed(1);
+    html+='<div class="progress-label"><span>总进度</span><span>'+totalPct+'%<span class="pct-small">'+formatMin(totalDone)+'/'+formatMin(cfg.totalMin)+'</span></span></div>';
+    html+='<div class="progress-bar" style="border-radius:50px"><div class="fill" style="border-radius:50px;width:'+totalPct+'%"></div></div>';
+  }else if(stageId==='专升本'){
+    const subPhases=cfg.subPhases;
+    let totalDone=0;
+    subPhases.forEach(sp=>{
+      let phaseDone=0;
+      Object.keys(state.taskStates).forEach(tid=>{const tpl=getTaskTemplate(tid);if(tpl&&tpl.stage===stageId&&tpl.relatedPhase===sp.id){phaseDone+=getTaskProgressMin(tid)}});
+      totalDone+=phaseDone;
+      const pct=Math.min(100,(phaseDone/sp.totalMin*100)).toFixed(1);
+      html+='<div class="progress-label"><span>'+sp.name+'</span><span>'+pct+'%<span class="pct-small">'+formatMin(phaseDone)+'/'+formatMin(sp.totalMin)+'</span></span></div>';
+      html+='<div class="progress-bar" style="border-radius:50px"><div class="fill" style="border-radius:50px;width:'+pct+'%"></div></div>';
+    });
+    // Add elastic task progress
+    Object.keys(state.taskStates).forEach(tid=>{const tpl=getTaskTemplate(tid);if(tpl&&tpl.stage===stageId&&tpl.elastic){totalDone+=getTaskProgressMin(tid)}});
+    const totalPct=Math.min(100,(totalDone/cfg.totalMin*100)).toFixed(1);
+    html+='<div class="progress-label"><span>总进度</span><span>'+totalPct+'%<span class="pct-small">'+formatMin(totalDone)+'/'+formatMin(cfg.totalMin)+'</span></span></div>';
+    html+='<div class="progress-bar" style="border-radius:50px"><div class="fill" style="border-radius:50px;width:'+totalPct+'%"></div></div>';
+    // Subject stats
+    let eng=0,cn=0,comp=0;
+    Object.keys(state.taskStates).forEach(tid=>{const tpl=getTaskTemplate(tid);if(tpl&&tpl.stage==='专升本'){const v=getTaskProgressMin(tid);if(tpl.subject==='英语')eng+=v;else if(tpl.subject==='语文')cn+=v;else if(tpl.subject==='计算机')comp+=v}});
+    html+='<div class="subject-stats"><span>📖 '+formatMin(eng)+'</span><span>📝 '+formatMin(cn)+'</span><span>💻 '+formatMin(comp)+'</span></div>';
+  }else if(stageId==='CPA'){
+    const subPhases=cfg.subPhases;
+    let totalDone=0;
+    subPhases.forEach(sp=>{
+      let phaseDone=0;
+      Object.keys(state.taskStates).forEach(tid=>{const tpl=getTaskTemplate(tid);if(tpl&&tpl.stage===stageId&&tpl.relatedPhase===sp.id){phaseDone+=getTaskProgressMin(tid)}});
+      totalDone+=phaseDone;
+      const pct=Math.min(100,(phaseDone/sp.totalMin*100)).toFixed(1);
+      html+='<div class="progress-label"><span>'+sp.name+'</span><span>'+pct+'%<span class="pct-small">'+formatMin(phaseDone)+'/'+formatMin(sp.totalMin)+'</span></span></div>';
+      html+='<div class="progress-bar" style="border-radius:50px"><div class="fill" style="border-radius:50px;width:'+pct+'%"></div></div>';
+    });
+    // Add elastic task progress
+    Object.keys(state.taskStates).forEach(tid=>{const tpl=getTaskTemplate(tid);if(tpl&&tpl.stage===stageId&&tpl.elastic){totalDone+=getTaskProgressMin(tid)}});
+    // Subject progress
+    let acct=0,strat=0;
+    Object.keys(state.taskStates).forEach(tid=>{const tpl=getTaskTemplate(tid);if(tpl&&tpl.stage==='CPA'){const v=getTaskProgressMin(tid);if(tpl.subject==='会计')acct+=v;else if(tpl.subject==='战略')strat+=v}});
+    const acctPct=Math.min(100,(acct/CPA_SUBJECT_TOTALS['会计']*100)).toFixed(1);
+    const stratPct=Math.min(100,(strat/CPA_SUBJECT_TOTALS['战略']*100)).toFixed(1);
+    html+='<div class="progress-label"><span>会计</span><span>'+acctPct+'%<span class="pct-small">'+formatMin(acct)+'/'+formatMin(CPA_SUBJECT_TOTALS['会计'])+'</span></span></div>';
+    html+='<div class="progress-bar" style="border-radius:50px"><div class="fill" style="border-radius:50px;width:'+acctPct+'%"></div></div>';
+    html+='<div class="progress-label"><span>战略</span><span>'+stratPct+'%<span class="pct-small">'+formatMin(strat)+'/'+formatMin(CPA_SUBJECT_TOTALS['战略'])+'</span></span></div>';
+    html+='<div class="progress-bar" style="border-radius:50px"><div class="fill" style="border-radius:50px;width:'+stratPct+'%"></div></div>';
+    const totalPct=Math.min(100,(totalDone/cfg.totalMin*100)).toFixed(1);
+    html+='<div class="progress-label"><span>阶段总进度</span><span>'+totalPct+'%<span class="pct-small">'+formatMin(totalDone)+'/'+formatMin(cfg.totalMin)+'</span></span></div>';
+    html+='<div class="progress-bar" style="border-radius:50px"><div class="fill" style="border-radius:50px;width:'+totalPct+'%"></div></div>';
+  }
+
+  // Mock chart - SVG line chart (multi-subject support)
+  const stageScores=state.mockScores.filter(s=>s.stage===stageId).slice(-30);
+  html+='<div class="stat-row" style="margin-top:8px"><span class="stat-label">模考总分趋势（最近30次）</span></div>';
+  if(stageScores.length>0){
+    // Group by subject
+    const groups={};
+    stageScores.forEach(s=>{
+      const key=s.subject||'总分';
+      if(!groups[key])groups[key]=[];
+      groups[key].push(s);
+    });
+    const subjects=Object.keys(groups);
+    const isMulti=subjects.length>1&&subjects[0]!=='总分';
+    const subColors={英语:'#6B8C42',语文:'#C8956A',计算机:'#8DAF7A',会计:'#6B8C42',战略:'#C8956A'};
+    const defColors=['#6B8C42','#C8956A','#8DAF7A'];
+
+    const allScores=stageScores.map(s=>s.score);
+    const maxS=Math.max(...allScores);
+    const yMin=0;
+    const yRange=maxS||1;
+
+    const W=320,H=isMulti?200:180,padL=38,padR=14,padT=isMulti?28:14,padB=26;
+    const cw=W-padL-padR,ch=H-padT-padB;
+
+    html+='<div class="mock-chart"><svg viewBox="0 0 '+W+' '+H+'" style="overflow:visible">';
+    // Y-axis with origin at 0
+    html+='<text x="6" y="'+(padT+4)+'" font-size="10" fill="var(--text2)" font-family="var(--font-cn)">'+maxS+'</text>';
+    html+='<text x="6" y="'+(padT+ch/2)+'" font-size="10" fill="var(--text2)" font-family="var(--font-cn)">'+Math.round(maxS/2)+'</text>';
+    html+='<text x="6" y="'+(padT+ch)+'" font-size="10" fill="var(--text2)" font-family="var(--font-cn)">0</text>';
+    html+='<line x1="'+padL+'" y1="'+(padT+ch)+'" x2="'+(padL+cw)+'" y2="'+(padT+ch)+'" stroke="var(--border)" stroke-width="1.5"/>';
+
+    // Legend for multi-subject
+    if(isMulti){
+      let lx=padL;
+      subjects.forEach((subj,si)=>{
+        const color=subColors[subj]||defColors[si%defColors.length];
+        html+='<circle cx="'+lx+'" cy="10" r="4" fill="'+color+'"/>';
+        html+='<text x="'+(lx+8)+'" y="14" font-size="9" fill="var(--text2)" font-family="var(--font-cn)">'+subj+'</text>';
+        lx+=subj.length*9+22;
+      });
+    }
+
+    // Draw per subject
+    subjects.forEach((subj,si)=>{
+      const color=subColors[subj]||defColors[si%defColors.length];
+      const scores=groups[subj].sort((a,b)=>a.timestamp-b.timestamp);
+      const n=scores.length;
+      let polyPoints='',dots='';
+      scores.forEach((s,i)=>{
+        const x=padL+(n===1?cw/2:(i/(n-1))*cw);
+        const y=padT+ch-((s.score-yMin)/yRange)*ch;
+        polyPoints+=x+','+y+' ';
+        dots+='<circle cx="'+x+'" cy="'+y+'" r="4.5" fill="#fff" stroke="'+color+'" stroke-width="2.5"><title>'+s.subject+' '+s.score+'分</title></circle>';
+      });
+      if(n>1){
+        html+='<polyline points="'+polyPoints.trim()+'" fill="none" stroke="'+color+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
+      }
+      html+=dots;
+    });
+
+    // Date labels from first subject
+    const mainScores=groups[subjects[0]].sort((a,b)=>a.timestamp-b.timestamp);
+    const mn=mainScores.length;
+    mainScores.forEach((s,i)=>{
+      const x=padL+(mn===1?cw/2:(i/(mn-1))*cw);
+      const d=new Date(s.timestamp);
+      html+='<text x="'+x+'" y="'+(H-3)+'" text-anchor="middle" font-size="9" fill="var(--text2)" font-family="var(--font-cn)">'+(d.getMonth()+1)+'/'+d.getDate()+'</text>';
+    });
+
+    html+='</svg></div>';
+  }else{
+    html+='<p style="color:var(--text2);font-size:10px;text-align:center;padding:10px">暂无模考记录</p>';
+  }
+
+  document.getElementById('dashboard').innerHTML=html;
+}
+
+// ========== STAGE SWITCH ==========
+function switchStage(stageId){
+  state.currentTab=stageId;
+  const cfg=getStageConfig(stageId);
+  if(cfg&&cfg.hasSubPhase){
+    if(!state.subPhaseTab)state.subPhaseTab={};
+    state.subPhaseTab[stageId]=getDefaultSubPhase(stageId);
+  }
+  saveState();renderAll();
+}
+
+// ========== CSV ==========
+function exportCSV(){
+  const rows=[['id','name','durationMinutes','difficulty','tags','subject','stage','relatedPhase','relatedSubPhase','isCompletedToday','isSelected','focusElapsedMinutes','completedAt','completedManually']];
+  const templates=getTaskTemplates();
+  templates.forEach(t=>{
+    const ts=getTaskState(t.id);
+    rows.push([t.id,t.name,t.durationMinutes,t.difficulty,(t.tags||[]).join(';'),t.subject,t.stage,t.relatedPhase,t.relatedSubPhase,ts.isCompletedToday?'1':'0',ts.isSelected?'1':'0',ts.focusElapsedMinutes,ts.completedAt||'',ts.completedManually?'1':'0']);
+  });
+  // Custom records
+  state.customRecords.forEach(r=>{rows.push(['CUSTOM:'+r.id,r.text,'','','','','','','','','','',r.date])});
+  // Mock scores
+  state.mockScores.forEach(s=>{rows.push(['MOCK:'+s.timestamp,s.taskId,s.score,s.stage,s.subject||'','','','','','','','',s.timestamp])});
+  const csv=rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  const now=new Date();a.download='Grit_Backup_'+now.getFullYear()+String(now.getMonth()+1).padStart(2,'0')+String(now.getDate()).padStart(2,'0')+'.csv';
+  a.click();URL.revokeObjectURL(a.href);
+}
+
+function importCSV(){
+  const input=document.createElement('input');input.type='file';input.accept='.csv';
+  input.onchange=function(e){
+    const file=e.target.files[0];if(!file)return;
+    const reader=new FileReader();
+    reader.onload=function(ev){
+      const text=ev.target.result;const lines=text.split('\n').filter(l=>l.trim());
+      if(lines.length<2){alert('CSV文件格式无效');return}
+      const newStates={};const newCustoms=[];const newScores=[];
+      for(let i=1;i<lines.length;i++){
+        const cols=parseCSVLine(lines[i]);if(cols.length<15)continue;
+        const id=cols[0];
+        if(id.startsWith('CUSTOM:')){newCustoms.push({id:id.replace('CUSTOM:',''),text:cols[1],date:cols[13],stage:''})}
+        else if(id.startsWith('MOCK:')){newScores.push({taskId:cols[1],score:parseInt(cols[2]),stage:cols[3],subject:cols[4],timestamp:parseInt(cols[13])||Date.now()})}
+        else{newStates[id]={isCompletedToday:cols[9]==='1',isSelected:cols[10]==='1',focusElapsedMinutes:parseInt(cols[11])||0,completedAt:cols[12]?parseInt(cols[12]):null,completedManually:cols[14]==='1'}}
+      }
+      state.taskStates={...state.taskStates,...newStates};
+      state.customRecords=[...state.customRecords,...newCustoms];
+      state.mockScores=[...state.mockScores,...newScores];
+      saveState();renderAll();alert('导入成功！');
+    };
+    reader.readAsText(file,'utf-8');
+  };
+  input.click();
+}
+
+function parseCSVLine(line){
+  const result=[];let current='';let inQuotes=false;
+  for(let i=0;i<line.length;i++){
+    const ch=line[i];
+    if(inQuotes){if(ch==='"'){if(i+1<line.length&&line[i+1]==='"'){current+='"';i++}else{inQuotes=false}}else{current+=ch}}
+    else{if(ch==='"'){inQuotes=true}else if(ch===','){result.push(current);current=''}else{current+=ch}}
+  }
+  result.push(current);return result;
+}
+
+// ========== INIT ==========
+function init(){
+  state=loadState();initTaskStates();checkDailyReset();
+  const {stage}=getCurrentStageAndSubPhase();
+  state.currentTab=stage?stage.id:'rest';
+  if(stage&&stage.hasSubPhase){
+    if(!state.subPhaseTab)state.subPhaseTab={};
+    if(!state.subPhaseTab[stage.id])state.subPhaseTab[stage.id]=getDefaultSubPhase(stage.id);
+  }
+  renderAll();checkLowEfficiency();
+
+  // Schedule midnight reset
+  const now=new Date();const midnight=new Date(now);midnight.setHours(24,0,0,0);
+  setTimeout(()=>{checkDailyReset();renderAll();setInterval(()=>{checkDailyReset();renderAll()},86400000)},midnight-now);
+}
+
+// ========== CSV Controls ==========
+document.addEventListener('DOMContentLoaded',()=>{
+  const csvDiv=document.createElement('div');csvDiv.className='csv-controls';
+  csvDiv.innerHTML='<button onclick="exportCSV()" title="导出">📤</button><button onclick="importCSV()" title="导入">📥</button>';
+  document.getElementById('dashboard').after(csvDiv);
+  init();
+});
+
+// ========== Border-radius fix for IDE built-in browser ==========
+function applyBorderRadius(){
+  // Use clip-path instead of border-radius to bypass IDE browser stripping
+  var rules=[
+    ['header, .card, .task-card, #low-banner, #tab-bar', 'inset(0 round 24px)'],
+    ['#tab-bar button', 'inset(0 round 50px)'],
+    ['.done-item', 'inset(0 round 50px)'],
+    ['.modal-box', 'inset(0 round 28px)']
+  ];
+  rules.forEach(function(rule){
+    var sel = rule[0], val = rule[1];
+    document.querySelectorAll(sel).forEach(function(el){
+      el.style.setProperty('clip-path', val, 'important');
+      el.style.setProperty('border-radius', val.replace('inset(0 round ','').replace(')',''), 'important');
+    });
+  });
+  // Progress bars: only border-radius (no clip-path to preserve dot pattern)
+  document.querySelectorAll('.progress-bar, .progress-bar .fill').forEach(function(el){
+    el.style.setProperty('border-radius', '50px', 'important');
+  });
+}
+// Override renderAll to apply border-radius after each render
+var _origRenderAll = renderAll;
+renderAll = function(){
+  _origRenderAll();
+  requestAnimationFrame(function(){ applyBorderRadius(); });
+};
+
+// Service Worker for offline PWA
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').catch(function(){});
+}
+
+// Pause pomodoro when app goes to background
+document.addEventListener('visibilitychange',function(){
+  if(!pomodoroData.taskId)return;
+  if(document.hidden){
+    if(pomodoroInterval){pomodoroAutoPaused=true;togglePomodoroPause()}
+  }else{
+    if(pomodoroAutoPaused){pomodoroAutoPaused=false;togglePomodoroPause()}
+  }
+});
+</script>
+</body>
+</html>
