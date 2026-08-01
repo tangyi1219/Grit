@@ -369,7 +369,7 @@ main{display:flex;gap:12px;padding:12px 16px;max-width:1200px;margin:0 auto}
   <div style="font-family:var(--font-en);font-size:48px;color:var(--primary);margin-bottom:12px" id="rest-timer">05:00</div>
   <div style="font-size:14px;color:var(--text2);margin-bottom:32px">休息一下，让大脑放松</div>
   <div style="display:flex;gap:20px">
-    <button onclick="skipRest()" style="width:64px;height:64px;border-radius:50%;border:2px solid var(--border);cursor:pointer;background:var(--bg);font-size:32px;display:flex;align-items:center;justify-content:center">⏭️</button>
+    <button onclick="skipRest()" style="width:64px;height:64px;border-radius:var(--radius-sm);border:2px solid var(--border);cursor:pointer;background:var(--bg);font-size:32px;display:flex;align-items:center;justify-content:center">⏭️</button>
   </div>
 </div>
 
@@ -412,11 +412,11 @@ function getTaskTemplates(){
   function add(o){t.push({id:'t'+(id++),...o})}
 
   // 二级
-  add({name:'Excel真题',durationMinutes:90,weight:30,difficulty:'高',tags:[],subject:'',stage:'二级',relatedPhase:'',relatedSubPhase:'',dateRange:{start:'2026-07-30',end:'2026-09-19'},isMockExam:false});
-  add({name:'Word真题',durationMinutes:90,weight:30,difficulty:'中',tags:[],subject:'',stage:'二级',relatedPhase:'',relatedSubPhase:'',dateRange:{start:'2026-07-30',end:'2026-09-19'},isMockExam:false});
-  add({name:'PPT真题',durationMinutes:60,weight:20,difficulty:'低',tags:['保分项'],subject:'',stage:'二级',relatedPhase:'',relatedSubPhase:'',dateRange:{start:'2026-07-30',end:'2026-09-19'},isMockExam:false});
-  add({name:'选择题碎片刷题',durationMinutes:30,weight:20,difficulty:'低',tags:['碎片友好'],subject:'',stage:'二级',relatedPhase:'',relatedSubPhase:'',dateRange:{start:'2026-07-30',end:'2026-09-19'},isMockExam:false});
-  add({name:'全真套题模考',durationMinutes:120,weight:0,difficulty:'高',tags:['模考'],subject:'',stage:'二级',relatedPhase:'',relatedSubPhase:'',dateRange:{start:'2026-07-30',end:'2026-09-19'},isMockExam:true});
+  add({name:'Excel真题',durationMinutes:90,difficulty:'高',tags:[],subject:'',stage:'二级',relatedPhase:'',relatedSubPhase:'',dateRange:{start:'2026-07-30',end:'2026-09-19'},isMockExam:false});
+  add({name:'Word真题',durationMinutes:90,difficulty:'中',tags:[],subject:'',stage:'二级',relatedPhase:'',relatedSubPhase:'',dateRange:{start:'2026-07-30',end:'2026-09-19'},isMockExam:false});
+  add({name:'PPT真题',durationMinutes:60,difficulty:'低',tags:['保分项'],subject:'',stage:'二级',relatedPhase:'',relatedSubPhase:'',dateRange:{start:'2026-07-30',end:'2026-09-19'},isMockExam:false});
+  add({name:'选择题碎片刷题',durationMinutes:30,difficulty:'低',tags:['碎片友好'],subject:'',stage:'二级',relatedPhase:'',relatedSubPhase:'',dateRange:{start:'2026-07-30',end:'2026-09-19'},isMockExam:false});
+  add({name:'全真套题模考',durationMinutes:120,difficulty:'高',tags:['模考'],subject:'',stage:'二级',relatedPhase:'',relatedSubPhase:'',dateRange:{start:'2026-07-30',end:'2026-09-19'},isMockExam:true});
   add({name:'弹性学习',durationMinutes:0,difficulty:'低',tags:['弹性'],subject:'',stage:'二级',relatedPhase:'',relatedSubPhase:'',dateRange:{start:'2026-07-30',end:'2026-09-19'},isMockExam:false,elastic:true});
 
   // 四级 Phase 1
@@ -596,7 +596,7 @@ function getTaskTemplate(taskId){return getTaskTemplates().find(t=>t.id===taskId
 function getTaskState(taskId){return state.taskStates[taskId]||{isCompletedToday:false,isSelected:false,focusElapsedMinutes:0,completedAt:null,completedManually:false}}
 function getTaskProgressMin(taskId){
   const ts=getTaskState(taskId);const tpl=getTaskTemplate(taskId);
-  if(!tpl||tpl.noCount)return 0;
+  if(!tpl)return 0;
   if(ts.isCompletedToday)return Math.max(ts.focusElapsedMinutes||0,tpl.durationMinutes);
   return ts.focusElapsedMinutes||0;
 }
@@ -915,7 +915,7 @@ function renderAll(){
   // Task pool
   let tasks=getTasksForStage(activeStage,activeSubPhase);
   const searchTerm=(document.getElementById('task-search').value||'').trim().toLowerCase();
-  if(searchTerm){tasks=tasks.filter(t=>t.name.toLowerCase().includes(searchTerm)||t.tags.some(tg=>tg.toLowerCase().includes(searchTerm)))}
+  if(searchTerm){tasks=tasks.filter(t=>t.name.toLowerCase().includes(searchTerm)||(t.subject||'').toLowerCase().includes(searchTerm)||t.tags.some(tg=>tg.toLowerCase().includes(searchTerm)))}
   const taskList=document.getElementById('task-list');
   if(tasks.length===0){
     taskList.innerHTML='<p style="color:var(--text2);font-size:12px;text-align:center;padding:20px">当前阶段暂无任务</p>';
@@ -1137,7 +1137,7 @@ function switchStage(stageId){
   const cfg=getStageConfig(stageId);
   if(cfg&&cfg.hasSubPhase){
     if(!state.subPhaseTab)state.subPhaseTab={};
-    state.subPhaseTab[stageId]=getDefaultSubPhase(stageId);
+    if(!state.subPhaseTab[stageId])state.subPhaseTab[stageId]=getDefaultSubPhase(stageId);
   }
   saveState();renderAll();
 }
@@ -1171,10 +1171,10 @@ function importCSV(){
       if(lines.length<2){alert('CSV文件格式无效');return}
       const newStates={};const newCustoms=[];const newScores=[];
       for(let i=1;i<lines.length;i++){
-        const cols=parseCSVLine(lines[i]);if(cols.length<15)continue;
+        const cols=parseCSVLine(lines[i]);if(cols.length<13)continue;
         const id=cols[0];
-        if(id.startsWith('CUSTOM:')){newCustoms.push({id:id.replace('CUSTOM:',''),text:cols[1],date:cols[13],stage:''})}
-        else if(id.startsWith('MOCK:')){newScores.push({taskId:cols[1],score:parseInt(cols[2]),stage:cols[3],subject:cols[4],timestamp:parseInt(cols[13])||Date.now()})}
+        if(id.startsWith('CUSTOM:')){newCustoms.push({id:id.replace('CUSTOM:',''),text:cols[1],date:cols[12],stage:''})}
+        else if(id.startsWith('MOCK:')){newScores.push({taskId:cols[1],score:parseInt(cols[2]),stage:cols[3],subject:cols[4],timestamp:parseInt(cols[12])||Date.now()})}
         else{newStates[id]={isCompletedToday:cols[9]==='1',isSelected:cols[10]==='1',focusElapsedMinutes:parseInt(cols[11])||0,completedAt:cols[12]?parseInt(cols[12]):null,completedManually:cols[14]==='1'}}
       }
       state.taskStates={...state.taskStates,...newStates};
@@ -1223,21 +1223,20 @@ document.addEventListener('DOMContentLoaded',()=>{
 
 // ========== Border-radius fix for IDE built-in browser ==========
 function applyBorderRadius(){
-  // Use clip-path instead of border-radius to bypass IDE browser stripping
+  // Force border-radius on elements that IDE browser might strip
   var rules=[
-    ['header, .card, .task-card, #low-banner, #tab-bar', 'inset(0 round 24px)'],
-    ['#tab-bar button', 'inset(0 round 50px)'],
-    ['.done-item', 'inset(0 round 50px)'],
-    ['.modal-box', 'inset(0 round 28px)']
+    ['header, .card, .task-card, #low-banner, #tab-bar', '24px'],
+    ['#tab-bar button', '50px'],
+    ['.done-item', '50px'],
+    ['.modal-box', '28px']
   ];
   rules.forEach(function(rule){
     var sel = rule[0], val = rule[1];
     document.querySelectorAll(sel).forEach(function(el){
-      el.style.setProperty('clip-path', val, 'important');
-      el.style.setProperty('border-radius', val.replace('inset(0 round ','').replace(')',''), 'important');
+      el.style.setProperty('border-radius', val, 'important');
     });
   });
-  // Progress bars: only border-radius (no clip-path to preserve dot pattern)
+  // Progress bars
   document.querySelectorAll('.progress-bar, .progress-bar .fill').forEach(function(el){
     el.style.setProperty('border-radius', '50px', 'important');
   });
