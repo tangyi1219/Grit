@@ -1,4 +1,4 @@
-const CACHE = 'grit-v2';
+const CACHE = 'grit-v3';
 
 // 激活时清理旧缓存
 self.addEventListener('activate', e => {
