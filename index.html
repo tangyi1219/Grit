@@ -1896,7 +1896,17 @@ renderAll = function(){
 
 // Service Worker for offline PWA
 if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('sw.js').catch(function(){});
+  navigator.serviceWorker.register('sw.js').then(function(reg){
+    // Auto-reload when new SW is ready
+    reg.addEventListener('updatefound',function(){
+      var w=reg.installing;
+      w.addEventListener('statechange',function(){
+        if(w.state==='activated'&&navigator.serviceWorker.controller){
+          window.location.reload();
+        }
+      });
+    });
+  }).catch(function(){});
 }
 
 // Pause pomodoro when app goes to background

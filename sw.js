@@ -1,5 +1,10 @@
 const CACHE = 'grit-v4';
 
+// 立即激活新 SW，不等待旧页面关闭
+self.addEventListener('install', e => {
+  self.skipWaiting();
+});
+
 // 激活时清理旧缓存
 self.addEventListener('activate', e => {
   e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))));
