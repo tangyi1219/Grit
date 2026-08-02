@@ -1431,8 +1431,11 @@ function scheduleSync(){
   }),2000);
 }
 
-// Pull from GitHub when user switches back to this tab
+// Pull from GitHub when user switches back to this tab, push when leaving
 document.addEventListener('visibilitychange',function(){
+  if(document.hidden&&localStorage.getItem(TOKEN_KEY)){
+    syncToGitHub().catch(()=>{});
+  }
   if(!document.hidden&&localStorage.getItem(TOKEN_KEY)){
     restoreFromGitHub().then(remoteData=>{
       if(remoteData){
@@ -1468,19 +1471,17 @@ async function restoreFromGitHub(){
 let noiseCtx=null,noiseActive=false,noiseCtxReady=false;
 let noiseEnabled=localStorage.getItem('grit_noise')!=='off';
 
-async function ensureAudioContext(){
-  if(noiseCtx)return noiseCtx;
+function initNoiseCtx(){
+  if(noiseCtxReady)return;
   try{
     noiseCtx=new(window.AudioContext||window.webkitAudioContext)();
-    if(noiseCtx.state==='suspended'){await noiseCtx.resume()}
-  }catch(e){}
-  return noiseCtx;
+    noiseCtx.resume().then(()=>{noiseCtxReady=true;}).catch(()=>{noiseCtx=null;});
+  }catch(e){noiseCtx=null;}
 }
-// Pre-create AudioContext on first user interaction for mobile
-document.addEventListener('click',async function resumeCtx(){
-  if(noiseCtx&&noiseCtx.state==='suspended'){await noiseCtx.resume()}
-  if(!noiseCtx){await ensureAudioContext()}
-},{once:false});
+// Create AudioContext on first user interaction for mobile
+['touchstart','click'].forEach(function(ev){
+  document.addEventListener(ev,initNoiseCtx,{once:true});
+});
 
 function toggleNoisePreference(){
   noiseEnabled=!noiseEnabled;
@@ -1538,11 +1539,10 @@ function createDropBuffer(ctx,durMs){
   return buf;
 }
 
-async function startWhiteNoise(){
+function startWhiteNoise(){
   if(noiseActive)return;
+  if(!noiseCtx||noiseCtx.state==='suspended')return;
   try{
-    await ensureAudioContext();
-    if(noiseCtx.state==='suspended'){await noiseCtx.resume()}
     noiseActive=true;
 
     // ====== RAIN (loud, dominant) ======
@@ -1847,9 +1847,6 @@ async function init(){
     if(!state.subPhaseTab[stage.id])state.subPhaseTab[stage.id]=getDefaultSubPhase(stage.id);
   }
   renderAll();checkLowEfficiency();
-
-  // Pre-init AudioContext for mobile
-  ensureAudioContext();
 
   // Sync noise button state
   document.getElementById('pomo-noise-btn').textContent=noiseEnabled?'🔊':'🔇';
