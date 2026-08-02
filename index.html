@@ -169,7 +169,7 @@ main{display:flex;gap:12px;padding:12px 16px;max-width:1200px;margin:0 auto}
 }
 #tab-bar button{
   flex:1 0 auto;padding:10px 4px;border:none;background:transparent;color:var(--text2);
-  font-size:30px;cursor:pointer;font-family:var(--font-cn);min-height:50px;transition:all 0.2s;white-space:nowrap;
+  font-size:12px;cursor:pointer;font-family:var(--font-cn);min-height:50px;transition:all 0.2s;white-space:nowrap;
   border-bottom:3px solid transparent;border-radius:var(--radius-sm);margin:4px 2px;
 }
 #tab-bar button.active{background:var(--primary);color:#fff;font-weight:bold;border-bottom-color:var(--aux1)}
@@ -234,10 +234,26 @@ main{display:flex;gap:12px;padding:12px 16px;max-width:1200px;margin:0 auto}
 #rest-screen .rest-emoji{font-size:80px;margin-bottom:16px}
 #rest-screen .rest-text{font-size:16px;color:var(--text2);line-height:2}
 
-/* ====== CSV Controls ====== */
-.csv-controls{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
-.csv-controls button{font-size:26px;cursor:pointer;border:none;background:none;color:var(--text2);padding:4px;font-family:var(--font-cn);transition:all 0.15s;line-height:1}
-.csv-controls button:hover{transform:scale(1.2);color:var(--primary)}
+/* ====== Sync Controls ====== */
+.sync-controls{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;align-items:center}
+.sync-controls button{font-size:26px;cursor:pointer;border:none;background:none;color:var(--text2);padding:4px;font-family:var(--font-cn);transition:all 0.15s;line-height:1}
+.sync-controls button:hover{transform:scale(1.2);color:var(--primary)}
+
+/* ====== Sync Indicator ====== */
+#sync-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-left:4px;vertical-align:middle}
+#sync-dot.synced{background:#6B8C42}
+#sync-dot.syncing{background:#D4A840;animation:pulse 1s infinite}
+#sync-dot.error{background:#A07070}
+
+/* ====== Weekly Report & Mock Trend Modal ====== */
+#weekly-modal .modal-box,#mock-trend-modal .modal-box{max-width:440px;text-align:left}
+#weekly-modal .wr-header,#mock-trend-modal .wr-header{font-size:13px;color:var(--primary);margin-bottom:12px;text-align:center;font-weight:bold}
+#weekly-modal .wr-day,#mock-trend-modal .wr-day{margin-bottom:8px;padding:6px 10px;background:var(--bg);border-radius:var(--radius-sm)}
+#weekly-modal .wr-day-title,#mock-trend-modal .wr-day-title{font-size:12px;font-weight:bold;color:var(--text);margin-bottom:2px}
+#weekly-modal .wr-day-detail,#mock-trend-modal .wr-day-detail{font-size:11px;color:var(--text2);line-height:1.8}
+#weekly-modal .wr-total,#mock-trend-modal .wr-total{font-size:13px;margin-top:12px;padding-top:10px;border-top:1.5px solid var(--border);text-align:center;color:var(--primary);font-weight:bold}
+#weekly-modal .wr-empty,#mock-trend-modal .wr-empty{font-size:12px;color:var(--text2);text-align:center;padding:20px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
 
 /* ====== Responsive ====== */
 @media(max-width:768px){
@@ -249,10 +265,9 @@ main{display:flex;gap:12px;padding:12px 16px;max-width:1200px;margin:0 auto}
   .pomodoro-dialog .timer{font-size:42px}
   .pomodoro-dialog .tomato{font-size:160px!important}
   .task-card .btn-icon{width:34px;height:34px;font-size:18px}
-  .task-card .btn-icon.select{font-size:20px}
-  #tab-bar button{flex:1 0 auto;font-size:18px;padding:8px 2px;margin:4px 1px}
+  #tab-bar button{flex:1 0 auto;font-size:11px;padding:8px 1px;margin:4px 1px}
   .pomodoro-dialog .pomo-btn-icon{width:52px;height:52px;font-size:28px}
-  .csv-controls button{font-size:18px}
+  .sync-controls button{font-size:18px}
 }
 </style>
 </head>
@@ -272,6 +287,7 @@ main{display:flex;gap:12px;padding:12px 16px;max-width:1200px;margin:0 auto}
     <span id="header-date" style="font-size:20px;font-weight:bold">📅 ----</span>
     <span id="header-streak" style="font-size:20px;font-weight:bold">🔥 连续0天</span>
     <span id="header-focus" style="font-size:20px;font-weight:bold">⏱️ 0min</span>
+    <span id="header-pomo" style="font-size:20px;font-weight:bold">🍅 0个</span>
   </div>
 </header>
 
@@ -280,7 +296,10 @@ main{display:flex;gap:12px;padding:12px 16px;max-width:1200px;margin:0 auto}
   <section id="task-pool" class="card" style="border-radius:24px">
     <div id="task-pool-header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px">
       <h3 style="margin-bottom:0">📋 今日任务池</h3>
-      <div id="subphase-bar"></div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button onclick="showCustomTaskModal()" style="font-size:20px;cursor:pointer;border:none;background:none;color:var(--text2);padding:0;line-height:1;font-family:var(--font-cn)" title="添加任务">➕</button>
+        <div id="subphase-bar"></div>
+      </div>
     </div>
     <input type="text" id="task-search" placeholder="🔍 搜索任务..." oninput="renderAll()" style="width:100%;padding:8px 12px;border:1.5px solid var(--border);border-radius:50px;background:var(--bg);font-size:12px;font-family:var(--font-cn);color:var(--text);margin-bottom:8px;outline:none">
     <div id="task-list"></div>
@@ -315,12 +334,12 @@ main{display:flex;gap:12px;padding:12px 16px;max-width:1200px;margin:0 auto}
 
 <!-- Bottom Tab Bar -->
 <nav id="tab-bar">
-  <button data-stage="二级" onclick="switchStage('二级')" title="二级">📗</button>
-  <button data-stage="四级" onclick="switchStage('四级')" title="四级">📘</button>
-  <button data-stage="六级" onclick="switchStage('六级')" title="六级">📙</button>
-  <button data-stage="专升本" onclick="switchStage('专升本')" title="专升本">🎓</button>
-  <button data-stage="CPA" onclick="switchStage('CPA')" title="CPA">📊</button>
-  <button data-stage="rest" onclick="switchStage('rest')" title="休息">☕</button>
+  <button data-stage="二级" onclick="switchStage('二级')" title="二级">二级</button>
+  <button data-stage="四级" onclick="switchStage('四级')" title="四级">四级</button>
+  <button data-stage="六级" onclick="switchStage('六级')" title="六级">六级</button>
+  <button data-stage="专升本" onclick="switchStage('专升本')" title="专升本">专升本</button>
+  <button data-stage="CPA" onclick="switchStage('CPA')" title="CPA">CPA</button>
+  <button data-stage="rest" onclick="switchStage('rest')" title="休息">休息</button>
 </nav>
 
 <!-- Pomodoro Overlay -->
@@ -330,6 +349,7 @@ main{display:flex;gap:12px;padding:12px 16px;max-width:1200px;margin:0 auto}
     <div class="timer" id="pomo-timer">00:00</div>
     <div class="task-label" id="pomo-task-label"></div>
     <div class="pomo-actions">
+      <button class="pomo-btn-icon noise" id="pomo-noise-btn" onclick="toggleNoisePreference()" title="白噪音">🔊</button>
       <button class="pomo-btn-icon pause" id="pomo-pause-btn" onclick="togglePomodoroPause()" title="暂停">⏸️</button>
       <button class="pomo-btn-icon end" onclick="endPomodoroEarly()" title="结束专注">⏹️</button>
     </div>
@@ -361,13 +381,86 @@ main{display:flex;gap:12px;padding:12px 16px;max-width:1200px;margin:0 auto}
   </div>
 </div>
 
-<!-- Rest Timer Overlay -->
-<div id="rest-overlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:210;background:#E8EAD8;justify-content:center;align-items:center;flex-direction:column">
-  <div style="font-size:80px;margin-bottom:20px">☕</div>
-  <div style="font-family:var(--font-en);font-size:48px;color:var(--primary);margin-bottom:12px" id="rest-timer">05:00</div>
-  <div style="font-size:14px;color:var(--text2);margin-bottom:32px">休息一下，让大脑放松</div>
-  <div style="display:flex;gap:20px">
-    <button onclick="skipRest()" style="width:64px;height:64px;border-radius:var(--radius-sm);border:2px solid var(--border);cursor:pointer;background:var(--bg);font-size:32px;display:flex;align-items:center;justify-content:center">⏭️</button>
+<!-- Break Confirm Modal -->
+<div class="modal-overlay" id="break-modal">
+  <div class="modal-box" style="border-radius:28px">
+    <h3>🍅 专注完成！</h3>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:12px">25分钟到了，要休息一下吗？</p>
+    <div class="modal-actions">
+      <button class="modal-btn submit" onclick="confirmBreak()" title="休息">☕ 休息</button>
+      <button class="modal-btn skip" onclick="continueFocus()" title="继续专注">▶️ 继续</button>
+    </div>
+  </div>
+</div>
+
+<!-- Sync Settings Modal -->
+<div class="modal-overlay" id="sync-modal">
+  <div class="modal-box" style="border-radius:28px">
+    <h3>☁️ GitHub 自动同步</h3>
+    <p style="font-size:11px;color:var(--text2);margin-bottom:12px;text-align:left;line-height:1.8">
+      数据自动保存到 GitHub，换设备/清缓存也不会丢。<br>
+      1. 打开 <a href="https://github.com/settings/tokens" target="_blank" style="color:var(--primary)">github.com/settings/tokens</a><br>
+      2. 生成 classic token，勾选 <b>repo</b> 权限<br>
+      3. 复制 token 粘贴到下方
+    </p>
+    <input type="password" id="github-token-input" placeholder="粘贴 GitHub Token..." style="border-radius:50px;margin-bottom:8px">
+    <input type="text" id="github-branch-input" placeholder="分支名 (默认 main)" style="border-radius:50px;font-size:12px">
+    <div class="modal-actions">
+      <button class="modal-btn submit" onclick="saveSyncSettings()">保存</button>
+      <button class="modal-btn skip" onclick="closeSyncModal()">取消</button>
+    </div>
+    <p id="sync-msg" style="font-size:10px;margin-top:8px;min-height:14px;color:var(--danger)"></p>
+  </div>
+</div>
+
+<!-- Delete Confirm Modal -->
+<div class="modal-overlay" id="delete-modal">
+  <div class="modal-box" style="border-radius:28px">
+    <h3>确认删除？</h3>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:12px" id="delete-msg"></p>
+    <div class="modal-actions">
+      <button class="modal-btn submit" style="background:var(--danger);color:#fff" onclick="confirmDelete()">删除</button>
+      <button class="modal-btn skip" onclick="cancelDelete()">取消</button>
+    </div>
+  </div>
+</div>
+
+<!-- Custom Task Modal -->
+<div class="modal-overlay" id="custom-task-modal">
+  <div class="modal-box" style="border-radius:28px">
+    <h3>➕ 添加自定义任务</h3>
+    <input type="text" id="ct-name" placeholder="任务名称" style="border-radius:50px;margin-bottom:6px">
+    <input type="number" id="ct-duration" placeholder="时长（分钟），0=弹性" style="border-radius:50px;margin-bottom:6px" min="0">
+    <select id="ct-difficulty" style="border-radius:50px;margin-bottom:6px;width:100%;padding:10px;border:1.5px solid var(--border);font-family:var(--font-cn);font-size:13px;background:var(--bg)">
+      <option value="低">难度：低</option><option value="中" selected>难度：中</option><option value="高">难度：高</option>
+    </select>
+    <input type="text" id="ct-subject" placeholder="科目（如英语、会计）" style="border-radius:50px;margin-bottom:6px">
+    <div class="modal-actions">
+      <button class="modal-btn submit" onclick="addCustomTask()">添加</button>
+      <button class="modal-btn skip" onclick="closeCustomTaskModal()">取消</button>
+    </div>
+  </div>
+</div>
+
+<!-- Weekly Report Modal -->
+<div class="modal-overlay" id="weekly-modal">
+  <div class="modal-box" style="border-radius:28px">
+    <h3 id="wr-header" class="wr-header"></h3>
+    <div id="wr-content"></div>
+    <div class="modal-actions" style="margin-top:12px">
+      <button class="modal-btn skip" onclick="closeWeeklyModal()" style="border-radius:50px">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- Mock Trend Modal -->
+<div class="modal-overlay" id="mock-trend-modal">
+  <div class="modal-box" style="border-radius:28px">
+    <h3 id="mt-header" class="wr-header"></h3>
+    <div id="mt-content"></div>
+    <div class="modal-actions" style="margin-top:12px">
+      <button class="modal-btn skip" onclick="closeMockTrendModal()" style="border-radius:50px">关闭</button>
+    </div>
   </div>
 </div>
 
@@ -520,32 +613,53 @@ function getTaskTemplates(){
 
 // ========== STATE ==========
 const STORAGE_KEY='grit_data';
+const TOKEN_KEY='grit_github_token';
+const BRANCH_KEY='grit_github_branch';
 let state={
   taskStates:{},customRecords:[],mockScores:[],consecutiveDays:0,
   lastActiveDate:'',lowEfficiencyDismissedToday:false,
-  currentStage:'',currentTab:'',subPhaseTab:{}
+  currentStage:'',currentTab:'',subPhaseTab:{},customTasks:[]
 };
 
 function loadState(){
-  try{const raw=localStorage.getItem(STORAGE_KEY);if(raw){const s=JSON.parse(raw);return{...state,...s}}}
-  catch(e){console.warn('State load failed')}
+  try{
+    const raw=localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      let s;
+      try{ s = JSON.parse(raw); }
+      catch(e){
+        console.warn('State data corrupted, resetting to default');
+        localStorage.removeItem(STORAGE_KEY);
+        alert('数据已损坏，已重置为默认状态。建议从 GitHub 恢复数据。');
+      }
+      if(s){ return {...state, ...s}; }
+    }
+  }catch(e){ console.warn('State load failed'); }
   return JSON.parse(JSON.stringify(state));
 }
 function saveState(){
   state.lastActiveDate=getTodayStr();
   localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
+  scheduleSync();
 }
 function initTaskStates(){
   const templates=getTaskTemplates();
   const newStates={};
+  // Preserve all existing states (including custom tasks)
+  Object.keys(state.taskStates).forEach(tid=>{
+    newStates[tid]={...state.taskStates[tid]};
+  });
+  // Ensure all template tasks have states
   templates.forEach(t=>{
-    if(state.taskStates[t.id]){newStates[t.id]={...state.taskStates[t.id]}}
-    else{newStates[t.id]={isCompletedToday:false,isSelected:false,focusElapsedMinutes:0,completedAt:null,completedManually:false}}
+    if(!newStates[t.id]){
+      newStates[t.id]={isCompletedToday:false,isSelected:false,focusElapsedMinutes:0,completedAt:null,completedManually:false};
+    }
   });
   state.taskStates=newStates;
 }
 
 // ========== UTILS ==========
+function escapeHtml(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
 function getTodayStr(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function getYesterdayStr(){const d=new Date();d.setDate(d.getDate()-1);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
 function parseDate(str){const p=str.split('-');return new Date(+p[0],+p[1]-1,+p[2])}
@@ -569,6 +683,9 @@ function getTasksForStage(stageId,subPhaseId){
   }else{
     filtered=templates.filter(t=>t.stage===stageId);
   }
+  // Include custom tasks for this stage
+  const customs=state.customTasks.filter(t=>t.stage===stageId);
+  filtered=filtered.concat(customs);
   if(cfg.hasSubPhase&&subPhaseId){
     filtered=filtered.filter(t=>t.relatedPhase===subPhaseId||!t.relatedPhase);
   }
@@ -589,7 +706,7 @@ function switchSubPhase(stageId,subPhaseId){
   saveState();renderAll();
 }
 
-function getTaskTemplate(taskId){return getTaskTemplates().find(t=>t.id===taskId)}
+function getTaskTemplate(taskId){return getTaskTemplates().find(t=>t.id===taskId)||state.customTasks.find(t=>t.id===taskId)}
 function getTaskState(taskId){return state.taskStates[taskId]||{isCompletedToday:false,isSelected:false,focusElapsedMinutes:0,completedAt:null,completedManually:false}}
 function getTaskProgressMin(taskId){
   const ts=getTaskState(taskId);const tpl=getTaskTemplate(taskId);
@@ -604,7 +721,6 @@ function checkDailyReset(){
   if(state.lastActiveDate!==today){
     Object.keys(state.taskStates).forEach(tid=>{
       const ts=state.taskStates[tid];const tpl=getTaskTemplate(tid);
-      if(ts.isCompletedToday&&(!tpl||!tpl.elastic))ts.focusElapsedMinutes=0;
       ts.isCompletedToday=false;
       ts.isSelected=false;
     });
@@ -664,29 +780,36 @@ function goToTaskPool(){dismissLowBanner();window.scrollTo({top:document.getElem
 // ========== POMODORO ==========
 let pomodoroInterval=null;
 let pomodoroAutoPaused=false;
-let pomodoroData={taskId:null,remaining:0,total:0,countUp:false};
+let pomodoroData={taskId:null,remaining:0,total:0,countUp:false,mode:'focus'};
+
+function getFocusDuration(taskId){
+  const tpl=getTaskTemplate(taskId);const ts=getTaskState(taskId);
+  if(!tpl||tpl.elastic)return 25*60;
+  const remaining=(tpl.durationMinutes-(ts.focusElapsedMinutes||0))*60;
+  return Math.max(60,Math.min(25*60,remaining));
+}
 
 function startPomodoro(taskId){
   const tpl=getTaskTemplate(taskId);const ts=getTaskState(taskId);
+  if(!tpl)return;
   if(tpl.elastic){
-    const elapsed=ts.focusElapsedMinutes*60;
-    pomodoroData={taskId,remaining:0,total:-1,countUp:true};
+    pomodoroData={taskId,remaining:0,total:-1,countUp:true,mode:'focus'};
     document.getElementById('pomo-task-label').textContent=tpl.name+' (弹性·正计时)';
   }else{
-    const total=tpl.durationMinutes*60;
-    const elapsed=ts.focusElapsedMinutes*60;
-    const remaining=total-elapsed;
-    if(remaining<=0){completeTask(taskId);return}
-    pomodoroData={taskId,remaining,total,countUp:false};
-    document.getElementById('pomo-task-label').textContent=tpl.name+' ('+tpl.durationMinutes+'min)';
+    const dur=getFocusDuration(taskId);
+    const min=Math.round(dur/60);
+    pomodoroData={taskId,remaining:dur,total:dur,countUp:false,mode:'focus'};
+    document.getElementById('pomo-task-label').textContent=tpl.name+' (专注 '+min+'min)';
   }
   updatePomodoroDisplay();
   document.getElementById('pomodoro-overlay').classList.add('show');
   document.getElementById('pomo-pause-btn').textContent='⏸️';
   document.querySelector('.pomodoro-dialog .tomato').classList.remove('paused');
+  document.querySelector('.pomodoro-dialog .tomato').textContent='🍅';
   if(pomodoroInterval)clearInterval(pomodoroInterval);
   pomodoroInterval=setInterval(tickPomodoro,1000);
   document.getElementById('pomo-pause-btn').style.display='';
+  if(noiseEnabled)startWhiteNoise();
   saveState();
 }
 
@@ -695,11 +818,69 @@ function tickPomodoro(){
   else{pomodoroData.remaining--}
   updatePomodoroDisplay();
   if(!pomodoroData.countUp&&pomodoroData.remaining<=0){
-    clearInterval(pomodoroInterval);pomodoroInterval=null;
-    document.getElementById('pomodoro-overlay').classList.remove('show');
-    completeTask(pomodoroData.taskId);
-    pomodoroData.taskId=null;
-    notifyPomodoroEnd();
+    if(pomodoroData.mode==='focus'){
+      // Focus session ended — accumulate actual session minutes
+      clearInterval(pomodoroInterval);pomodoroInterval=null;
+      const ts=getTaskState(pomodoroData.taskId);
+      const sessionMin=Math.round(pomodoroData.total/60);
+      ts.focusElapsedMinutes=(ts.focusElapsedMinutes||0)+sessionMin;
+      const tpl=getTaskTemplate(pomodoroData.taskId);
+      const taskComplete=tpl&&ts.focusElapsedMinutes>=tpl.durationMinutes;
+      if(taskComplete){
+        ts.isCompletedToday=true;ts.completedAt=Date.now();ts.completedManually=false;
+        if(tpl.isMockExam){showMockModal(pomodoroData.taskId)}
+      }
+      if(taskComplete){
+        // Task is done — close overlay
+        stopWhiteNoise();
+        document.getElementById('pomodoro-overlay').classList.remove('show');
+        pomodoroData.taskId=null;pomodoroData.mode='focus';
+        notifyPomodoroEnd();
+        saveState();renderAll();
+      }else{
+        // Task not done yet — show break dialog
+        let breakBellInterval=setInterval(function(){
+          try{
+            const nc=new(window.AudioContext||window.webkitAudioContext)();
+            const o=nc.createOscillator();const g=nc.createGain();
+            o.connect(g);g.connect(nc.destination);
+            o.type='sine';o.frequency.setValueAtTime(880,nc.currentTime);
+            o.frequency.setValueAtTime(660,nc.currentTime+0.15);
+            g.gain.setValueAtTime(0.3,nc.currentTime);
+            g.gain.exponentialRampToValueAtTime(0.01,nc.currentTime+0.4);
+            o.start(nc.currentTime);o.stop(nc.currentTime+0.4);
+          }catch(e){}
+        },2000);
+        stopWhiteNoise();
+        document.getElementById('pomo-pause-btn').style.display='none';
+        document.getElementById('break-modal').classList.add('show');
+        pomodoroData._bellInterval=breakBellInterval;
+        saveState();renderAll();
+      }
+    }else{
+      // Break ended — auto start next focus session
+      try{
+        const nc=new(window.AudioContext||window.webkitAudioContext)();
+        const o=nc.createOscillator();const g=nc.createGain();
+        o.connect(g);g.connect(nc.destination);
+        o.type='sine';o.frequency.setValueAtTime(660,nc.currentTime);
+        o.frequency.setValueAtTime(880,nc.currentTime+0.1);
+        g.gain.setValueAtTime(0.25,nc.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.01,nc.currentTime+0.3);
+        o.start(nc.currentTime);o.stop(nc.currentTime+0.3);
+      }catch(e){}
+      const dur=getFocusDuration(pomodoroData.taskId);
+      const min=Math.round(dur/60);
+      pomodoroData.mode='focus';
+      pomodoroData.remaining=dur;
+      pomodoroData.total=dur;
+      document.querySelector('.pomodoro-dialog .tomato').textContent='🍅';
+      const tpl=getTaskTemplate(pomodoroData.taskId);
+      document.getElementById('pomo-task-label').textContent=(tpl?tpl.name:'')+' (专注 '+min+'min)';
+      updatePomodoroDisplay();
+      if(noiseEnabled)startWhiteNoise();
+      saveState();
+    }
   }
 }
 
@@ -711,8 +892,8 @@ function updatePomodoroDisplay(){
 }
 
 function togglePomodoroPause(){
-  if(pomodoroInterval){clearInterval(pomodoroInterval);pomodoroInterval=null;document.getElementById('pomo-pause-btn').textContent='▶️';document.querySelector('.pomodoro-dialog .tomato').classList.add('paused')}
-  else{pomodoroInterval=setInterval(tickPomodoro,1000);document.getElementById('pomo-pause-btn').textContent='⏸️';document.querySelector('.pomodoro-dialog .tomato').classList.remove('paused')}
+  if(pomodoroInterval){clearInterval(pomodoroInterval);pomodoroInterval=null;document.getElementById('pomo-pause-btn').textContent='▶️';document.querySelector('.pomodoro-dialog .tomato').classList.add('paused');stopWhiteNoise()}
+  else{pomodoroInterval=setInterval(tickPomodoro,1000);document.getElementById('pomo-pause-btn').textContent='⏸️';document.querySelector('.pomodoro-dialog .tomato').classList.remove('paused');if(noiseEnabled&&pomodoroData.mode==='focus')startWhiteNoise()}
 }
 
 function notifyPomodoroEnd(){
@@ -727,54 +908,40 @@ function notifyPomodoroEnd(){
     o.start(ctx.currentTime);o.stop(ctx.currentTime+0.4);
     if(navigator.vibrate)navigator.vibrate([200,100,200]);
   }catch(e){}
-  startRest();
-}
-
-// ====== Rest Timer ======
-let restInterval=null;
-let restRemaining=300; // 5 minutes
-
-function startRest(){
-  restRemaining=300;
-  updateRestDisplay();
-  document.getElementById('rest-overlay').style.display='flex';
-  if(restInterval)clearInterval(restInterval);
-  restInterval=setInterval(tickRest,1000);
-}
-
-function tickRest(){
-  restRemaining--;
-  updateRestDisplay();
-  if(restRemaining<=0){
-    clearInterval(restInterval);restInterval=null;
-    document.getElementById('rest-overlay').style.display='none';
-  }
-}
-
-function skipRest(){
-  clearInterval(restInterval);restInterval=null;
-  document.getElementById('rest-overlay').style.display='none';
-}
-
-function updateRestDisplay(){
-  const m=Math.floor(restRemaining/60);const s=restRemaining%60;
-  document.getElementById('rest-timer').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
 }
 
 function endPomodoroEarly(){
+  if(pomodoroData.mode==='break'){
+    // Skip break — close directly
+    if(pomodoroInterval){clearInterval(pomodoroInterval);pomodoroInterval=null}
+    document.getElementById('pomodoro-overlay').classList.remove('show');
+    pomodoroData.taskId=null;pomodoroData.mode='focus';
+    saveState();renderAll();
+    return;
+  }
   document.getElementById('pomo-pause-btn').style.display='none';
   document.getElementById('early-end-modal').classList.add('show');
 }
 
 function confirmEarlyEnd(){
+  if(pomodoroData._bellInterval){clearInterval(pomodoroData._bellInterval);pomodoroData._bellInterval=null}
   if(pomodoroInterval){clearInterval(pomodoroInterval);pomodoroInterval=null}
+  stopWhiteNoise();
+  if(pomodoroData.mode==='break'){
+    // Skipping break
+    document.getElementById('pomodoro-overlay').classList.remove('show');
+    document.getElementById('early-end-modal').classList.remove('show');
+    pomodoroData.taskId=null;pomodoroData.mode='focus';
+    saveState();renderAll();
+    return;
+  }
   const elapsedSec=pomodoroData.countUp?pomodoroData.remaining:(pomodoroData.total-pomodoroData.remaining);
   const elapsedMin=Math.floor(elapsedSec/60);
   const ts=getTaskState(pomodoroData.taskId);
   const tpl=getTaskTemplate(pomodoroData.taskId);
-  ts.focusElapsedMinutes=Math.max(ts.focusElapsedMinutes,elapsedMin);
+  ts.focusElapsedMinutes=(ts.focusElapsedMinutes||0)+elapsedMin;
   ts.completedManually=false;
-  pomodoroData.taskId=null;
+  pomodoroData.taskId=null;pomodoroData.mode='focus';
   document.getElementById('pomodoro-overlay').classList.remove('show');
   document.getElementById('early-end-modal').classList.remove('show');
   saveState();renderAll();
@@ -784,6 +951,38 @@ function cancelEarlyEnd(){
   document.getElementById('early-end-modal').classList.remove('show');
   document.getElementById('pomo-pause-btn').style.display='';
   if(!pomodoroInterval){pomodoroInterval=setInterval(tickPomodoro,1000);document.getElementById('pomo-pause-btn').textContent='⏸️'}
+}
+
+function confirmBreak(){
+  if(pomodoroData._bellInterval){clearInterval(pomodoroData._bellInterval);pomodoroData._bellInterval=null}
+  document.getElementById('break-modal').classList.remove('show');
+  pomodoroData.mode='break';
+  pomodoroData.remaining=5*60;
+  pomodoroData.total=5*60;
+  document.querySelector('.pomodoro-dialog .tomato').textContent='☕';
+  document.getElementById('pomo-task-label').textContent='休息一下 (5min)';
+  document.getElementById('pomo-pause-btn').style.display='';
+  updatePomodoroDisplay();
+  pomodoroInterval=setInterval(tickPomodoro,1000);
+  saveState();
+}
+
+function continueFocus(){
+  if(pomodoroData._bellInterval){clearInterval(pomodoroData._bellInterval);pomodoroData._bellInterval=null}
+  document.getElementById('break-modal').classList.remove('show');
+  const dur=getFocusDuration(pomodoroData.taskId);
+  const min=Math.round(dur/60);
+  pomodoroData.mode='focus';
+  pomodoroData.remaining=dur;
+  pomodoroData.total=dur;
+  document.querySelector('.pomodoro-dialog .tomato').textContent='🍅';
+  const tpl=getTaskTemplate(pomodoroData.taskId);
+  document.getElementById('pomo-task-label').textContent=(tpl?tpl.name:'')+' (专注 '+min+'min)';
+  document.getElementById('pomo-pause-btn').style.display='';
+  updatePomodoroDisplay();
+  pomodoroInterval=setInterval(tickPomodoro,1000);
+  if(noiseEnabled)startWhiteNoise();
+  saveState();
 }
 
 // ========== TASK ACTIONS ==========
@@ -799,13 +998,6 @@ function startFocus(taskId){
 function manualComplete(taskId){
   const tpl=getTaskTemplate(taskId);const ts=getTaskState(taskId);
   ts.isCompletedToday=true;ts.completedAt=Date.now();ts.completedManually=true;
-  if(tpl.isMockExam){showMockModal(taskId)}
-  saveState();renderAll();
-}
-
-function completeTask(taskId){
-  const tpl=getTaskTemplate(taskId);const ts=getTaskState(taskId);
-  ts.isCompletedToday=true;ts.completedAt=Date.now();ts.focusElapsedMinutes=tpl.durationMinutes;ts.completedManually=false;
   if(tpl.isMockExam){showMockModal(taskId)}
   saveState();renderAll();
 }
@@ -850,6 +1042,56 @@ function addCustomRecord(){
 }
 function deleteCustomRecord(id){state.customRecords=state.customRecords.filter(r=>r.id!==id);saveState();renderAll()}
 
+let pendingDeleteId=null;
+function showDeleteConfirm(id,text){
+  pendingDeleteId=id;
+  document.getElementById('delete-msg').textContent='删除「'+text+'」？此操作不可撤销。';
+  document.getElementById('delete-modal').classList.add('show');
+}
+function confirmDelete(){
+  if(pendingDeleteId){deleteCustomRecord(pendingDeleteId);pendingDeleteId=null}
+  document.getElementById('delete-modal').classList.remove('show');
+}
+function cancelDelete(){
+  pendingDeleteId=null;
+  document.getElementById('delete-modal').classList.remove('show');
+}
+
+// ========== CUSTOM TASKS ==========
+function showCustomTaskModal(){
+  document.getElementById('ct-name').value='';
+  document.getElementById('ct-duration').value='';
+  document.getElementById('ct-difficulty').value='中';
+  document.getElementById('ct-subject').value='';
+  document.getElementById('custom-task-modal').classList.add('show');
+}
+function closeCustomTaskModal(){
+  document.getElementById('custom-task-modal').classList.remove('show');
+}
+function addCustomTask(){
+  const name=document.getElementById('ct-name').value.trim();
+  if(!name)return;
+  const duration=parseInt(document.getElementById('ct-duration').value)||0;
+  const difficulty=document.getElementById('ct-difficulty').value;
+  const subject=document.getElementById('ct-subject').value.trim();
+  const stage=state.currentTab||'二级';
+  const today=getTodayStr();
+  const task={
+    id:'ct'+Date.now(),name,durationMinutes:duration,difficulty,subject,
+    stage,tags:[],relatedPhase:'',relatedSubPhase:'',dateRange:{start:today,end:'2099-12-31'},
+    isMockExam:false,elastic:duration===0,_custom:true
+  };
+  state.customTasks.push(task);
+  state.taskStates[task.id]={isCompletedToday:false,isSelected:false,focusElapsedMinutes:0,completedAt:null,completedManually:false};
+  closeCustomTaskModal();
+  saveState();renderAll();
+}
+function deleteCustomTask(id){
+  state.customTasks=state.customTasks.filter(t=>t.id!==id);
+  delete state.taskStates[id];
+  saveState();renderAll();
+}
+
 // ========== RENDER ==========
 function renderAll(){
   const today=getTodayStr();
@@ -867,6 +1109,14 @@ function renderAll(){
   // Header
   document.getElementById('header-date').textContent='📅 '+today;
   document.getElementById('header-streak').textContent='🔥 连续'+state.consecutiveDays+'天';
+  // Pomodoro count today
+  let pomoCount=0;
+  Object.keys(state.taskStates).forEach(tid=>{
+    const ts=state.taskStates[tid];
+    pomoCount+=(ts.focusElapsedMinutes||0);
+  });
+  pomoCount=Math.floor(pomoCount/25);
+  document.getElementById('header-pomo').textContent='🍅 '+pomoCount+'个';
 
   // Sub-phase bar (inside task pool)
   const sp=document.getElementById('subphase-bar');
@@ -933,7 +1183,7 @@ function renderAll(){
       let actions='';
       if(inPomodoro){actions=''}
       else if(completed){actions='<button class="btn-icon undo" onclick="event.stopPropagation();undoTask(\''+t.id+'\')" title="撤回">❎</button>'}
-      else if(!selected){actions=''}
+      else if(!selected){actions=t._custom?'<button class="btn-icon deselect" onclick="event.stopPropagation();deleteCustomTask(\''+t.id+'\')" title="删除任务" style="font-size:16px">🗑</button>':''}
       else if(selected&&!hasFocus){actions='<button class="btn-icon focus" onclick="event.stopPropagation();startFocus(\''+t.id+'\')" title="开始专注">🍅</button><button class="btn-icon done" onclick="event.stopPropagation();manualComplete(\''+t.id+'\')" title="手动完成">✅</button><button class="btn-icon deselect" onclick="event.stopPropagation();deselectTask(\''+t.id+'\')" title="取消选择">✖</button>'}
       else if(selected&&hasFocus){actions='<button class="btn-icon continue" onclick="event.stopPropagation();startFocus(\''+t.id+'\')" title="继续专注">🔁</button><button class="btn-icon done" onclick="event.stopPropagation();manualComplete(\''+t.id+'\')" title="手动完成">✅</button><button class="btn-icon deselect" onclick="event.stopPropagation();deselectTask(\''+t.id+'\')" title="取消选择">✖</button>'}
       let cardClick='';
@@ -944,7 +1194,7 @@ function renderAll(){
       tags+='<span class="tag '+diffClass+'" style="border-radius:50px">'+t.difficulty+'</span>';
       const durationText=t.elastic?'弹性':t.durationMinutes+'min';
       const cardStyle=cardClick?cardClick:' style="border-radius:24px"';
-      return '<div class="task-card'+statusClass+'"'+cardStyle+'><span class="task-name">'+t.name+'</span><span class="task-meta">'+durationText+'</span><div class="task-tags">'+tags+'</div><div class="task-actions">'+actions+'</div></div>';
+      return '<div class="task-card'+statusClass+'"'+cardStyle+'><span class="task-name">'+escapeHtml(t.name)+'</span><span class="task-meta">'+durationText+'</span><div class="task-tags">'+tags+'</div><div class="task-actions">'+actions+'</div></div>';
     }).join('');
   }
 
@@ -966,7 +1216,7 @@ function renderAll(){
     let html=todayDone.map(e=>{const label=e.completedManually?'✅ 手动':'⏱️ 专注';return '<div class="done-item" style="border-radius:50px"><span>'+e.name+'</span><span class="time">'+label+' '+e.time+'</span></div>';}).join('');
     const todayCustoms=state.customRecords.filter(r=>r.date===today);
     todayCustoms.sort((a,b)=>a.id.localeCompare(b.id));
-    html+=todayCustoms.map(r=>'<div class="done-item custom-record" style="border-radius:50px"><span>📝 '+r.text+'</span><span class="time"><button class="del-btn" onclick="deleteCustomRecord(\''+r.id+'\')">&times;</button></span></div>').join('');
+    html+=todayCustoms.map(r=>'<div class="done-item custom-record" style="border-radius:50px"><span>📝 '+r.text+'</span><span class="time"><button class="del-btn" onclick="showDeleteConfirm(\''+r.id+'\',\''+r.text.replace(/'/g,"\\'")+'\')">&times;</button></span></div>').join('');
     if(todayDone.length===0&&todayCustoms.length===0)html='<p style="color:var(--text2);font-size:10px">暂无完成</p>';
     return html;
   })();
@@ -1026,7 +1276,7 @@ function renderDashboard(stageId,activeSubPhase){
     // Subject stats
     let eng=0,cn=0,comp=0;
     Object.keys(state.taskStates).forEach(tid=>{const tpl=getTaskTemplate(tid);if(tpl&&tpl.stage==='专升本'){const v=getTaskProgressMin(tid);if(tpl.subject==='英语')eng+=v;else if(tpl.subject==='语文')cn+=v;else if(tpl.subject==='计算机')comp+=v}});
-    html+='<div class="subject-stats"><span>📖 '+formatMin(eng)+'</span><span>📝 '+formatMin(cn)+'</span><span>💻 '+formatMin(comp)+'</span></div>';
+    html+='<div class="subject-stats"><span>英语 '+formatMin(eng)+'</span><span>语文 '+formatMin(cn)+'</span><span>计算机 '+formatMin(comp)+'</span></div>';
   }else if(stageId==='CPA'){
     const subPhases=cfg.subPhases;
     let totalDone=0;
@@ -1054,80 +1304,6 @@ function renderDashboard(stageId,activeSubPhase){
     html+='<div class="progress-bar" style="border-radius:50px"><div class="fill" style="border-radius:50px;width:'+totalPct+'%"></div></div>';
   }
 
-  // Mock chart - SVG line chart (multi-subject support)
-  const stageScores=state.mockScores.filter(s=>s.stage===stageId).slice(-30);
-  html+='<div class="stat-row" style="margin-top:8px"><span class="stat-label">模考总分趋势（最近30次）</span></div>';
-  if(stageScores.length>0){
-    // Group by subject
-    const groups={};
-    stageScores.forEach(s=>{
-      const key=s.subject||'总分';
-      if(!groups[key])groups[key]=[];
-      groups[key].push(s);
-    });
-    const subjects=Object.keys(groups);
-    const isMulti=subjects.length>1&&subjects[0]!=='总分';
-    const subColors={英语:'#6B8C42',语文:'#C8956A',计算机:'#8DAF7A',会计:'#6B8C42',战略:'#C8956A'};
-    const defColors=['#6B8C42','#C8956A','#8DAF7A'];
-
-    const allScores=stageScores.map(s=>s.score);
-    const maxS=Math.max(...allScores);
-    const yMin=0;
-    const yRange=maxS||1;
-
-    const W=320,H=isMulti?200:180,padL=38,padR=14,padT=isMulti?28:14,padB=26;
-    const cw=W-padL-padR,ch=H-padT-padB;
-
-    html+='<div class="mock-chart"><svg viewBox="0 0 '+W+' '+H+'" style="overflow:visible">';
-    // Y-axis with origin at 0
-    html+='<text x="6" y="'+(padT+4)+'" font-size="10" fill="var(--text2)" font-family="var(--font-cn)">'+maxS+'</text>';
-    html+='<text x="6" y="'+(padT+ch/2)+'" font-size="10" fill="var(--text2)" font-family="var(--font-cn)">'+Math.round(maxS/2)+'</text>';
-    html+='<text x="6" y="'+(padT+ch)+'" font-size="10" fill="var(--text2)" font-family="var(--font-cn)">0</text>';
-    html+='<line x1="'+padL+'" y1="'+(padT+ch)+'" x2="'+(padL+cw)+'" y2="'+(padT+ch)+'" stroke="var(--border)" stroke-width="1.5"/>';
-
-    // Legend for multi-subject
-    if(isMulti){
-      let lx=padL;
-      subjects.forEach((subj,si)=>{
-        const color=subColors[subj]||defColors[si%defColors.length];
-        html+='<circle cx="'+lx+'" cy="10" r="4" fill="'+color+'"/>';
-        html+='<text x="'+(lx+8)+'" y="14" font-size="9" fill="var(--text2)" font-family="var(--font-cn)">'+subj+'</text>';
-        lx+=subj.length*9+22;
-      });
-    }
-
-    // Draw per subject
-    subjects.forEach((subj,si)=>{
-      const color=subColors[subj]||defColors[si%defColors.length];
-      const scores=groups[subj].sort((a,b)=>a.timestamp-b.timestamp);
-      const n=scores.length;
-      let polyPoints='',dots='';
-      scores.forEach((s,i)=>{
-        const x=padL+(n===1?cw/2:(i/(n-1))*cw);
-        const y=padT+ch-((s.score-yMin)/yRange)*ch;
-        polyPoints+=x+','+y+' ';
-        dots+='<circle cx="'+x+'" cy="'+y+'" r="4.5" fill="#fff" stroke="'+color+'" stroke-width="2.5"><title>'+s.subject+' '+s.score+'分</title></circle>';
-      });
-      if(n>1){
-        html+='<polyline points="'+polyPoints.trim()+'" fill="none" stroke="'+color+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>';
-      }
-      html+=dots;
-    });
-
-    // Date labels from first subject
-    const mainScores=groups[subjects[0]].sort((a,b)=>a.timestamp-b.timestamp);
-    const mn=mainScores.length;
-    mainScores.forEach((s,i)=>{
-      const x=padL+(mn===1?cw/2:(i/(mn-1))*cw);
-      const d=new Date(s.timestamp);
-      html+='<text x="'+x+'" y="'+(H-3)+'" text-anchor="middle" font-size="9" fill="var(--text2)" font-family="var(--font-cn)">'+(d.getMonth()+1)+'/'+d.getDate()+'</text>';
-    });
-
-    html+='</svg></div>';
-  }else{
-    html+='<p style="color:var(--text2);font-size:10px;text-align:center;padding:10px">暂无模考记录</p>';
-  }
-
   document.getElementById('dashboard').innerHTML=html;
 }
 
@@ -1142,64 +1318,488 @@ function switchStage(stageId){
   saveState();renderAll();
 }
 
-// ========== CSV ==========
-function exportCSV(){
-  const rows=[['id','name','durationMinutes','difficulty','tags','subject','stage','relatedPhase','relatedSubPhase','isCompletedToday','isSelected','focusElapsedMinutes','completedAt','completedManually']];
-  const templates=getTaskTemplates();
-  templates.forEach(t=>{
-    const ts=getTaskState(t.id);
-    rows.push([t.id,t.name,t.durationMinutes,t.difficulty,(t.tags||[]).join(';'),t.subject,t.stage,t.relatedPhase,t.relatedSubPhase,ts.isCompletedToday?'1':'0',ts.isSelected?'1':'0',ts.focusElapsedMinutes,ts.completedAt||'',ts.completedManually?'1':'0']);
+// ========== GITHUB SYNC ==========
+const GITHUB_OWNER='tangyi1219',GITHUB_REPO='Grit',GITHUB_FILE='grit_data.json';
+let syncTimer=null,syncInProgress=false;
+
+function getSyncBranch(){return localStorage.getItem(BRANCH_KEY)||'main'}
+
+function sanitizeToken(t){return t.replace(/[^\x20-\x7E]/g,'').trim()}
+
+function getSyncSettings(){
+  const token=sanitizeToken(localStorage.getItem(TOKEN_KEY)||'');
+  return {token,enabled:!!token,branch:getSyncBranch()};
+}
+
+function showSyncModal(){
+  document.getElementById('github-token-input').value=sanitizeToken(localStorage.getItem(TOKEN_KEY)||'');
+  document.getElementById('github-branch-input').value=getSyncBranch();
+  document.getElementById('sync-msg').textContent='';
+  document.getElementById('sync-modal').classList.add('show');
+}
+
+function closeSyncModal(){
+  document.getElementById('sync-modal').classList.remove('show');
+}
+
+function saveSyncSettings(){
+  const token=sanitizeToken(document.getElementById('github-token-input').value);
+  if(!token){document.getElementById('sync-msg').textContent='请输入 Token';return}
+  localStorage.setItem(TOKEN_KEY,token);
+  const branch=document.getElementById('github-branch-input').value.trim();
+  if(branch)localStorage.setItem(BRANCH_KEY,branch);
+  closeSyncModal();
+  syncToGitHub().then(()=>{
+    updateSyncDot('synced');
+  }).catch(e=>{
+    updateSyncDot('error');
+    alert('同步失败：'+e.message+'\n\n请检查：\n1. Token 是否有 repo 权限\n2. 分支名是否正确（main 或 gh-pages）');
   });
-  // Custom records
-  state.customRecords.forEach(r=>{rows.push(['CUSTOM:'+r.id,r.text,'','','','','','','','','','',r.date])});
-  // Mock scores
-  state.mockScores.forEach(s=>{rows.push(['MOCK:'+s.timestamp,s.taskId,s.score,s.stage,s.subject||'','','','','','','','',s.timestamp])});
-  const csv=rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
-  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
-  const now=new Date();a.download='Grit_Backup_'+now.getFullYear()+String(now.getMonth()+1).padStart(2,'0')+String(now.getDate()).padStart(2,'0')+'.csv';
-  a.click();URL.revokeObjectURL(a.href);
 }
 
-function importCSV(){
-  const input=document.createElement('input');input.type='file';input.accept='.csv';
-  input.onchange=function(e){
-    const file=e.target.files[0];if(!file)return;
-    const reader=new FileReader();
-    reader.onload=function(ev){
-      const text=ev.target.result;const lines=text.split('\n').filter(l=>l.trim());
-      if(lines.length<2){alert('CSV文件格式无效');return}
-      const newStates={};const newCustoms=[];const newScores=[];
-      for(let i=1;i<lines.length;i++){
-        const cols=parseCSVLine(lines[i]);if(cols.length<13)continue;
-        const id=cols[0];
-        if(id.startsWith('CUSTOM:')){newCustoms.push({id:id.replace('CUSTOM:',''),text:cols[1],date:cols[12],stage:''})}
-        else if(id.startsWith('MOCK:')){newScores.push({taskId:cols[1],score:parseInt(cols[2]),stage:cols[3],subject:cols[4],timestamp:parseInt(cols[12])||Date.now()})}
-        else{newStates[id]={isCompletedToday:cols[9]==='1',isSelected:cols[10]==='1',focusElapsedMinutes:parseInt(cols[11])||0,completedAt:cols[12]?parseInt(cols[12]):null,completedManually:cols[14]==='1'}}
+function updateSyncDot(status){
+  const dot=document.getElementById('sync-dot');
+  if(!dot)return;
+  dot.className=status;
+  dot.title=status==='synced'?'已同步':status==='syncing'?'同步中...':'同步失败';
+}
+
+async function getGitHubFileSha(token,branch){
+  const url='https://api.github.com/repos/'+GITHUB_OWNER+'/'+GITHUB_REPO+'/contents/'+GITHUB_FILE+'?ref='+branch;
+  const res=await fetch(url,{headers:{'Authorization':'Bearer '+token,'Accept':'application/vnd.github.v3+json'}});
+  if(res.status===404)return null;
+  if(!res.ok)throw new Error((await res.json()).message||'HTTP '+res.status);
+  const data=await res.json();
+  return data.sha;
+}
+
+async function syncToGitHub(){
+  if(syncInProgress)return;
+  const {token,enabled,branch}=getSyncSettings();
+  if(!enabled||!token)return;
+  syncInProgress=true;
+  updateSyncDot('syncing');
+  try{
+    const raw=localStorage.getItem(STORAGE_KEY)||'{}';
+    const data=JSON.parse(raw);
+    delete data.githubToken;
+    delete data.githubBranch;
+    const content=JSON.stringify(data);
+    const bytes=new TextEncoder().encode(content);
+    const base64=btoa(String.fromCharCode(...bytes));
+    let sha=null;
+    try{sha=await getGitHubFileSha(token,branch)}catch(e){
+      throw new Error('无法读取远程文件: '+(e.message||'检查分支名和Token'));
+    }
+    const url='https://api.github.com/repos/'+GITHUB_OWNER+'/'+GITHUB_REPO+'/contents/'+GITHUB_FILE;
+    const body={message:'Auto-sync data',content:base64,branch:branch};
+    if(sha)body.sha=sha;
+    let res=await fetch(url,{method:'PUT',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json','Accept':'application/vnd.github.v3+json'},body:JSON.stringify(body)});
+    // SHA mismatch: re-fetch SHA and retry once
+    if(res.status===422){
+      const errData=await res.json().catch(()=>({}));
+      if(errData.message&&errData.message.includes('does not match')){
+        const newSha=errData.message.match(/does not match (\w+)/);
+        if(newSha&&newSha[1]){
+          // Wait a moment, then retry with the correct SHA from the error
+          await new Promise(r=>setTimeout(r,200));
+          try{sha=await getGitHubFileSha(token,branch)}catch(e){}
+          if(sha){body.sha=sha;res=await fetch(url,{method:'PUT',headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json','Accept':'application/vnd.github.v3+json'},body:JSON.stringify(body)})}}
+        }
       }
-      state.taskStates={...state.taskStates,...newStates};
-      state.customRecords=[...state.customRecords,...newCustoms];
-      state.mockScores=[...state.mockScores,...newScores];
-      saveState();renderAll();alert('导入成功！');
-    };
-    reader.readAsText(file,'utf-8');
-  };
-  input.click();
+    if(!res.ok){
+      const errJson=await res.json().catch(()=>({}));
+      throw new Error(errJson.message||'HTTP '+res.status);
+    }
+    updateSyncDot('synced');
+  }catch(e){
+    console.warn('GitHub sync error:',e);
+    updateSyncDot('error');
+    throw e;
+  }finally{syncInProgress=false}
 }
 
-function parseCSVLine(line){
-  const result=[];let current='';let inQuotes=false;
-  for(let i=0;i<line.length;i++){
-    const ch=line[i];
-    if(inQuotes){if(ch==='"'){if(i+1<line.length&&line[i+1]==='"'){current+='"';i++}else{inQuotes=false}}else{current+=ch}}
-    else{if(ch==='"'){inQuotes=true}else if(ch===','){result.push(current);current=''}else{current+=ch}}
+function scheduleSync(){
+  if(!localStorage.getItem(TOKEN_KEY))return;
+  if(syncTimer)clearTimeout(syncTimer);
+  syncTimer=setTimeout(()=>syncToGitHub().catch(e=>{
+    console.warn('Sync failed:',e.message);
+    const dot=document.getElementById('sync-dot');
+    if(dot){dot.className='error';dot.title='同步失败: '+e.message}
+  }),5000);
+}
+
+async function restoreFromGitHub(){
+  const {token,enabled,branch}=getSyncSettings();
+  if(!enabled||!token)return false;
+  try{
+    const url='https://api.github.com/repos/'+GITHUB_OWNER+'/'+GITHUB_REPO+'/contents/'+GITHUB_FILE+'?ref='+branch;
+    const res=await fetch(url,{headers:{'Authorization':'Bearer '+token,'Accept':'application/vnd.github.v3+json'}});
+    if(!res.ok)return false;
+    const data=await res.json();
+    const binary=atob(data.content.replace(/\s/g,''));
+    const bytes=new Uint8Array(binary.length);
+    for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
+    const content=new TextDecoder().decode(bytes);
+    localStorage.setItem(STORAGE_KEY,content);
+    return true;
+  }catch(e){console.warn('GitHub restore error:',e);return false}
+}
+
+// ========== WHITE NOISE (Rain + Fire Crackling) ==========
+let noiseCtx=null,noiseActive=false;
+let noiseEnabled=localStorage.getItem('grit_noise')!=='off';
+
+function toggleNoisePreference(){
+  noiseEnabled=!noiseEnabled;
+  localStorage.setItem('grit_noise',noiseEnabled?'on':'off');
+  const btn=document.getElementById('pomo-noise-btn');
+  if(noiseEnabled){
+    btn.textContent='🔊';
+    if(pomodoroData.mode==='focus'&&pomodoroInterval&&!document.querySelector('.pomodoro-dialog .tomato').classList.contains('paused'))startWhiteNoise();
+  }else{
+    btn.textContent='🔇';
+    stopWhiteNoise();
   }
-  result.push(current);return result;
+}
+let rainMaster=null,fireMaster=null;
+let rainTimers=[],fireTimers=[],rainNodes=[],fireNodes=[];
+
+function clearAllTimers(){
+  rainTimers.forEach(t=>clearTimeout(t));rainTimers=[];
+  fireTimers.forEach(t=>clearTimeout(t));fireTimers=[];
+}
+
+// Paul Kellet pink noise for background texture
+function generatePinkNoise(ctx,durSec){
+  const sr=ctx.sampleRate;
+  const len=Math.floor(sr*durSec);
+  const buf=ctx.createBuffer(1,len,sr);
+  const d=buf.getChannelData(0);
+  let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;
+  for(let i=0;i<len;i++){
+    const white=Math.random()*2-1;
+    b0=0.99886*b0+white*0.0555179;
+    b1=0.99332*b1+white*0.0750759;
+    b2=0.96900*b2+white*0.1538520;
+    b3=0.86650*b3+white*0.3104856;
+    b4=0.55000*b4+white*0.5329522;
+    b5=-0.7616*b5-white*0.0168980;
+    d[i]=(b0+b1+b2+b3+b4+b5+b6+white*0.5362)*0.11;
+    b6=white*0.115926;
+  }
+  return buf;
+}
+
+// Create a single raindrop burst: shaped noise with quick attack + exponential decay
+function createDropBuffer(ctx,durMs){
+  const sr=ctx.sampleRate;
+  const len=Math.floor(sr*durMs/1000);
+  if(len<3)return null;
+  const buf=ctx.createBuffer(1,len,sr);
+  const d=buf.getChannelData(0);
+  for(let i=0;i<len;i++){
+    const t=i/len;
+    const env=t<0.08?t/0.08:Math.exp(-6*(t-0.08));
+    d[i]=(Math.random()*2-1)*env;
+  }
+  return buf;
+}
+
+function startWhiteNoise(){
+  if(noiseActive)return;
+  try{
+    noiseCtx=new(window.AudioContext||window.webkitAudioContext)();
+    if(noiseCtx.state==='suspended'){noiseCtx.resume()}
+    noiseActive=true;
+
+    // ====== RAIN (loud, dominant) ======
+    rainMaster=noiseCtx.createGain();rainMaster.gain.value=0;
+    rainMaster.connect(noiseCtx.destination);
+    rainMaster.gain.setTargetAtTime(0.7,noiseCtx.currentTime,0.3);
+    rainNodes=[];
+
+    // Very subtle background texture (barely audible)
+    const bgBuf=generatePinkNoise(noiseCtx,8);
+    const bgSrc=noiseCtx.createBufferSource();bgSrc.buffer=bgBuf;bgSrc.loop=true;
+    const bgLP=noiseCtx.createBiquadFilter();bgLP.type='lowpass';bgLP.frequency.value=5000;
+    const bgHP=noiseCtx.createBiquadFilter();bgHP.type='highpass';bgHP.frequency.value=300;
+    const bgG=noiseCtx.createGain();bgG.gain.value=0.03;
+    bgSrc.connect(bgHP);bgHP.connect(bgLP);bgLP.connect(bgG);bgG.connect(rainMaster);
+    bgSrc.start(0);rainNodes.push(bgSrc);
+
+    // Individual raindrops (granular synthesis — main rain sound)
+    // Pre-build drop buffers of varying sizes
+    const dropBufs=[];
+    for(let s=0;s<6;s++){dropBufs.push(createDropBuffer(noiseCtx,10+s*12));}
+
+    function scheduleRaindrops(){
+      if(!noiseActive)return;
+      const now=noiseCtx.currentTime;
+      const burst=1+Math.floor(Math.random()*5);
+      for(let i=0;i<burst;i++){
+        const buf=dropBufs[Math.floor(Math.random()*dropBufs.length)];
+        if(!buf)continue;
+        const src=noiseCtx.createBufferSource();src.buffer=buf;
+        src.playbackRate.value=0.5+Math.random()*1.8;
+        const bp=noiseCtx.createBiquadFilter();bp.type='bandpass';
+        bp.frequency.value=600+Math.random()*7000;
+        bp.Q.value=0.3+Math.random()*1.2;
+        const g=noiseCtx.createGain();
+        g.gain.setValueAtTime(0,now);
+        g.gain.linearRampToValueAtTime(0.3+Math.random()*0.5,now+0.003);
+        g.gain.exponentialRampToValueAtTime(0.001,now+buf.duration);
+        src.connect(bp);bp.connect(g);g.connect(rainMaster);
+        src.start(now+Math.random()*0.06);src.stop(now+buf.duration+0.02);
+      }
+      rainTimers.push(setTimeout(scheduleRaindrops,12+Math.random()*35));
+    }
+    scheduleRaindrops();
+
+    // ====== FIRE (quiet, subtle background) ======
+    fireMaster=noiseCtx.createGain();fireMaster.gain.value=0;
+    fireMaster.connect(noiseCtx.destination);
+    fireMaster.gain.setTargetAtTime(0.04,noiseCtx.currentTime,0.5);
+    fireNodes=[];
+
+    // Deep rumble — very low filtered pink noise
+    const rumbleBuf=generatePinkNoise(noiseCtx,6);
+    const rumbleSrc=noiseCtx.createBufferSource();rumbleSrc.buffer=rumbleBuf;rumbleSrc.loop=true;
+    const rumbleLP=noiseCtx.createBiquadFilter();rumbleLP.type='lowpass';rumbleLP.frequency.value=90;
+    const rumbleHP=noiseCtx.createBiquadFilter();rumbleHP.type='highpass';rumbleHP.frequency.value=20;
+    const rumbleG=noiseCtx.createGain();rumbleG.gain.value=0.2;
+    rumbleSrc.connect(rumbleHP);rumbleHP.connect(rumbleLP);rumbleLP.connect(rumbleG);rumbleG.connect(fireMaster);
+    rumbleSrc.start(0);fireNodes.push(rumbleSrc);
+
+    // Fire LFO — gentle flicker
+    const fireLFO=noiseCtx.createOscillator();fireLFO.type='sine';fireLFO.frequency.value=0.9+Math.random()*2.2;
+    const fireLFOG=noiseCtx.createGain();fireLFOG.gain.value=0.06;
+    fireLFO.connect(fireLFOG);fireLFOG.connect(rumbleG.gain);
+    fireLFO.start(0);fireNodes.push(fireLFO);
+
+    // Subtle crackles — occasional, sparse
+    function fireCrackle(){
+      if(!noiseActive)return;
+      const now=noiseCtx.currentTime;
+      const n=Math.random()<0.55?1:Math.floor(Math.random()*3);
+      for(let i=0;i<n;i++){
+        const dur=0.006+Math.random()*0.035;
+        const len=Math.floor(noiseCtx.sampleRate*dur);
+        if(len<2)continue;
+        const buf=noiseCtx.createBuffer(1,len,noiseCtx.sampleRate);
+        const d=buf.getChannelData(0);
+        for(let j=0;j<len;j++){
+          const t=j/len;
+          d[j]=(Math.random()*2-1)*Math.exp(-10*t);
+        }
+        const s=noiseCtx.createBufferSource();s.buffer=buf;
+        const bp=noiseCtx.createBiquadFilter();bp.type='bandpass';
+        bp.frequency.value=300+Math.random()*2200;
+        bp.Q.value=0.3+Math.random()*0.5;
+        const g=noiseCtx.createGain();
+        g.gain.setValueAtTime(0,now);
+        g.gain.linearRampToValueAtTime(0.02+Math.random()*0.06,now+0.001);
+        g.gain.exponentialRampToValueAtTime(0.001,now+dur);
+        s.connect(bp);bp.connect(g);g.connect(fireMaster);
+        s.start(now+Math.random()*0.02);s.stop(now+dur+0.01);
+      }
+      fireTimers.push(setTimeout(fireCrackle,70+Math.random()*220));
+    }
+    fireCrackle();
+
+  }catch(e){console.warn('White noise init failed:',e)}
+}
+
+function stopWhiteNoise(){
+  noiseActive=false;
+  clearAllTimers();
+  try{
+    rainNodes.forEach(o=>{try{o.stop()}catch(e){}});rainNodes=[];
+    fireNodes.forEach(o=>{try{o.stop()}catch(e){}});fireNodes=[];
+    if(noiseCtx){noiseCtx.close();noiseCtx=null}
+  }catch(e){}
+  rainMaster=null;fireMaster=null;
+}
+
+// ========== WEEKLY REPORT ==========
+function showWeeklyReport(){
+  const today=new Date();
+  const dayOfWeek=today.getDay();
+  // Monday of this week
+  const monday=new Date(today);monday.setDate(today.getDate()-(dayOfWeek===0?6:dayOfWeek-1));
+  monday.setHours(0,0,0,0);
+  const sunday=new Date(monday);sunday.setDate(monday.getDate()+6);sunday.setHours(23,59,59,999);
+
+  const mStr=monday.getFullYear()+'-'+String(monday.getMonth()+1).padStart(2,'0')+'-'+String(monday.getDate()).padStart(2,'0');
+  const sStr=sunday.getFullYear()+'-'+String(sunday.getMonth()+1).padStart(2,'0')+'-'+String(sunday.getDate()).padStart(2,'0');
+
+  document.getElementById('wr-header').textContent='📊 周报 ('+mStr+' ~ '+sStr+')';
+
+  // Collect daily stats
+  const days=[];
+  const dayNames=['周日','周一','周二','周三','周四','周五','周六'];
+  for(let i=0;i<7;i++){
+    const d=new Date(monday);d.setDate(monday.getDate()+i);
+    const ds=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    const dayName=dayNames[d.getDay()];
+    days.push({date:ds,name:dayName,tasks:[],focusMin:0,pomoCount:0,subjects:{},customRecords:[]});
+  }
+
+  // Collect task completions
+  Object.keys(state.taskStates).forEach(tid=>{
+    const ts=state.taskStates[tid];if(!ts.completedAt)return;
+    const d=new Date(ts.completedAt);const ds=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    const day=days.find(dd=>dd.date===ds);if(!day)return;
+    const tpl=getTaskTemplate(tid);if(!tpl)return;
+    const label=ts.completedManually?'✅手动':'⏱️专注';
+    day.tasks.push({name:escapeHtml(tpl.name),label,subject:tpl.subject||''});
+    if(!ts.completedManually){day.pomoCount++;day.focusMin+=getTaskProgressMin(tid)}
+    else{day.focusMin+=tpl.durationMinutes||0}
+    if(tpl.subject){day.subjects[tpl.subject]=(day.subjects[tpl.subject]||0)+getTaskProgressMin(tid)}
+  });
+
+  // Collect custom records
+  state.customRecords.forEach(r=>{
+    const day=days.find(dd=>dd.date===r.date);if(!day)return;
+    day.customRecords.push(escapeHtml(r.text));
+  });
+
+  // Build HTML
+  let html='';
+  let weekFocus=0,weekPomo=0,weekTasks=0;
+  const weekSubjects={};
+  days.forEach(day=>{
+    weekFocus+=day.focusMin;weekPomo+=day.pomoCount;weekTasks+=day.tasks.length+day.customRecords.length;
+    Object.keys(day.subjects).forEach(s=>{weekSubjects[s]=(weekSubjects[s]||0)+day.subjects[s]});
+    const isToday=day.date===getTodayStr();
+    const todayStyle=isToday?' style="border:1.5px solid var(--primary)"':'';
+    html+='<div class="wr-day"'+todayStyle+'>';
+    html+='<div class="wr-day-title">'+day.name+' '+day.date+(isToday?' (今天)':'')+'</div>';
+    if(day.tasks.length===0&&day.customRecords.length===0){
+      html+='<div class="wr-day-detail">暂无记录</div>';
+    }else{
+      let detail='';
+      if(day.tasks.length>0){detail+=day.tasks.map(t=>t.label+' '+t.name).join('<br>');}
+      if(day.customRecords.length>0){detail+=(detail?'<br>':'')+day.customRecords.map(t=>'📝 '+t).join('<br>');}
+      html+='<div class="wr-day-detail">'+detail+'</div>';
+    }
+    if(day.focusMin>0||day.pomoCount>0){
+      html+='<div class="wr-day-detail" style="margin-top:2px">⏱️ '+formatMin(day.focusMin)+' · 🍅 '+day.pomoCount+'个</div>';
+    }
+    html+='</div>';
+  });
+
+  if(weekTasks===0){
+    html='<div class="wr-empty">本周暂无学习记录</div>';
+  }else{
+    let totalStr='本周总计：⏱️ '+formatMin(weekFocus)+' · 🍅 '+weekPomo+'个番茄 · 📋 '+weekTasks+'项任务';
+    const subjKeys=Object.keys(weekSubjects);
+    if(subjKeys.length>0){
+      totalStr+='<br>科目：'+subjKeys.map(s=>s+' '+formatMin(weekSubjects[s])).join(' · ');
+    }
+    html+='<div class="wr-total">'+totalStr+'</div>';
+  }
+
+  document.getElementById('wr-content').innerHTML=html;
+  document.getElementById('weekly-modal').classList.add('show');
+}
+
+function closeWeeklyModal(){
+  document.getElementById('weekly-modal').classList.remove('show');
+}
+
+// ========== MOCK TREND MODAL ==========
+function showMockTrend(stageId){
+  const cfg=getStageConfig(stageId);
+  const stageName=cfg?cfg.name:stageId;
+  const scores=state.mockScores.filter(s=>s.stage===stageId).sort((a,b)=>a.timestamp-b.timestamp);
+  document.getElementById('mt-header').textContent='📈 '+stageName+' 模考趋势';
+
+  if(scores.length===0){
+    document.getElementById('mt-content').innerHTML='<div class="wr-empty">暂无模考记录</div>';
+  }else{
+    // Group by subject
+    const groups={};
+    scores.forEach(s=>{
+      const key=s.subject||'总分';
+      if(!groups[key])groups[key]=[];
+      groups[key].push(s);
+    });
+    const subjects=Object.keys(groups);
+    const subColors={英语:'#6B8C42',语文:'#C8956A',计算机:'#5B8FBF',会计:'#A080C0',战略:'#D08060'};
+    const defColors=['#6B8C42','#C8956A','#5B8FBF','#A080C0','#D08060'];
+
+    const allScores=scores.map(s=>s.score);
+    const maxS=Math.max(...allScores,1);
+    const yMin=0;
+    const yRange=maxS;
+
+    const W=400,H=250,padL=42,padR=16,padT=20,padB=30;
+    const cw=W-padL-padR,ch=H-padT-padB;
+
+    let html='<div class="mock-chart"><svg viewBox="0 0 '+W+' '+H+'" style="overflow:visible;width:100%">';
+
+    // Y-axis
+    html+='<text x="6" y="'+(padT+4)+'" font-size="10" fill="var(--text2)" font-family="var(--font-cn)">'+maxS+'</text>';
+    html+='<text x="6" y="'+(padT+ch/2)+'" font-size="10" fill="var(--text2)" font-family="var(--font-cn)">'+Math.round(maxS/2)+'</text>';
+    html+='<text x="6" y="'+(padT+ch)+'" font-size="10" fill="var(--text2)" font-family="var(--font-cn)">0</text>';
+    html+='<line x1="'+padL+'" y1="'+(padT+ch)+'" x2="'+(padL+cw)+'" y2="'+(padT+ch)+'" stroke="var(--border)" stroke-width="1"/>';
+
+    // Draw per subject
+    subjects.forEach((subj,si)=>{
+      const color=subColors[subj]||defColors[si%defColors.length];
+      const pts=groups[subj].sort((a,b)=>a.timestamp-b.timestamp);
+      const n=pts.length;
+      let polyPoints='',dots='';
+      pts.forEach((s,i)=>{
+        const x=padL+(n===1?cw/2:(i/(n-1))*cw);
+        const y=padT+ch-((s.score-yMin)/yRange)*ch;
+        polyPoints+=x+','+y+' ';
+        dots+='<circle cx="'+x+'" cy="'+y+'" r="4" fill="#fff" stroke="'+color+'" stroke-width="2"/>';
+        // Show score label above point
+        const label=subjects.length>1?subj+':'+s.score:s.score+'分';
+        dots+='<text x="'+x+'" y="'+(y-8)+'" text-anchor="middle" font-size="9" fill="'+color+'" font-family="var(--font-cn)" font-weight="bold">'+label+'</text>';
+      });
+      if(n>1){
+        html+='<polyline points="'+polyPoints.trim()+'" fill="none" stroke="'+color+'" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>';
+      }
+      html+=dots;
+    });
+
+    // Date labels from first subject
+    const mainScores=groups[subjects[0]].sort((a,b)=>a.timestamp-b.timestamp);
+    const mn=mainScores.length;
+    mainScores.forEach((s,i)=>{
+      const x=padL+(mn===1?cw/2:(i/(mn-1))*cw);
+      const d=new Date(s.timestamp);
+      html+='<text x="'+x+'" y="'+(H-4)+'" text-anchor="middle" font-size="9" fill="var(--text2)" font-family="var(--font-cn)">'+(d.getMonth()+1)+'/'+d.getDate()+'</text>';
+    });
+
+    html+='</svg></div>';
+
+    // Stats
+    const avg=Math.round(allScores.reduce((a,b)=>a+b,0)/allScores.length);
+    const max=Math.max(...allScores);
+    const min=Math.min(...allScores);
+    html+='<div class="wr-total">共 '+scores.length+' 次 · 平均 '+avg+' 分 · 最高 '+max+' 分 · 最低 '+min+' 分</div>';
+    document.getElementById('mt-content').innerHTML=html;
+  }
+  document.getElementById('mock-trend-modal').classList.add('show');
+}
+
+function closeMockTrendModal(){
+  document.getElementById('mock-trend-modal').classList.remove('show');
 }
 
 // ========== INIT ==========
-function init(){
-  state=loadState();initTaskStates();checkDailyReset();
+async function init(){
+  state=loadState();
+  // If localStorage is empty but GitHub token exists, try restore
+  if(!localStorage.getItem(STORAGE_KEY)&&localStorage.getItem(TOKEN_KEY)){
+    const restored=await restoreFromGitHub();
+    if(restored){state=loadState()}
+  }
+  initTaskStates();checkDailyReset();
   const {stage}=getCurrentStageAndSubPhase();
   state.currentTab=stage?stage.id:'rest';
   if(stage&&stage.hasSubPhase){
@@ -1208,16 +1808,22 @@ function init(){
   }
   renderAll();checkLowEfficiency();
 
+  // Sync noise button state
+  document.getElementById('pomo-noise-btn').textContent=noiseEnabled?'🔊':'🔇';
+
+  // Init sync status
+  if(localStorage.getItem(TOKEN_KEY)){updateSyncDot('synced')}
+
   // Schedule midnight reset
   const now=new Date();const midnight=new Date(now);midnight.setHours(24,0,0,0);
   setTimeout(()=>{checkDailyReset();renderAll();setInterval(()=>{checkDailyReset();renderAll()},86400000)},midnight-now);
 }
 
-// ========== CSV Controls ==========
+// ========== Sync Controls ==========
 document.addEventListener('DOMContentLoaded',()=>{
-  const csvDiv=document.createElement('div');csvDiv.className='csv-controls';
-  csvDiv.innerHTML='<button onclick="exportCSV()" title="导出">📤</button><button onclick="importCSV()" title="导入">📥</button>';
-  document.getElementById('dashboard').after(csvDiv);
+  const syncDiv=document.createElement('div');syncDiv.className='sync-controls';
+  syncDiv.innerHTML='<button onclick="showSyncModal()" title="GitHub 同步">⚙️</button><button onclick="showWeeklyReport()" title="周报">📋</button><button onclick="showMockTrend(state.currentTab)" title="模考趋势">📈</button><span id="sync-dot" title="未设置同步"></span>';
+  document.getElementById('dashboard').after(syncDiv);
   init();
 });
 
