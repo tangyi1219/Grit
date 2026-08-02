@@ -1447,8 +1447,22 @@ async function restoreFromGitHub(){
 }
 
 // ========== WHITE NOISE (Rain + Fire Crackling) ==========
-let noiseCtx=null,noiseActive=false;
+let noiseCtx=null,noiseActive=false,noiseCtxReady=false;
 let noiseEnabled=localStorage.getItem('grit_noise')!=='off';
+
+function ensureAudioContext(){
+  if(noiseCtx)return noiseCtx;
+  try{
+    noiseCtx=new(window.AudioContext||window.webkitAudioContext)();
+    if(noiseCtx.state==='suspended'){noiseCtx.resume()}
+  }catch(e){}
+  return noiseCtx;
+}
+// Pre-create AudioContext on first user interaction for mobile
+document.addEventListener('click',function resumeCtx(){
+  if(noiseCtx&&noiseCtx.state==='suspended'){noiseCtx.resume()}
+  if(!noiseCtx){ensureAudioContext()}
+},{once:false});
 
 function toggleNoisePreference(){
   noiseEnabled=!noiseEnabled;
@@ -1509,7 +1523,7 @@ function createDropBuffer(ctx,durMs){
 function startWhiteNoise(){
   if(noiseActive)return;
   try{
-    noiseCtx=new(window.AudioContext||window.webkitAudioContext)();
+    ensureAudioContext();
     if(noiseCtx.state==='suspended'){noiseCtx.resume()}
     noiseActive=true;
 
@@ -1616,7 +1630,6 @@ function stopWhiteNoise(){
   try{
     rainNodes.forEach(o=>{try{o.stop()}catch(e){}});rainNodes=[];
     fireNodes.forEach(o=>{try{o.stop()}catch(e){}});fireNodes=[];
-    if(noiseCtx){noiseCtx.close();noiseCtx=null}
   }catch(e){}
   rainMaster=null;fireMaster=null;
 }
@@ -1807,6 +1820,9 @@ async function init(){
     if(!state.subPhaseTab[stage.id])state.subPhaseTab[stage.id]=getDefaultSubPhase(stage.id);
   }
   renderAll();checkLowEfficiency();
+
+  // Pre-init AudioContext for mobile
+  ensureAudioContext();
 
   // Sync noise button state
   document.getElementById('pomo-noise-btn').textContent=noiseEnabled?'🔊':'🔇';
