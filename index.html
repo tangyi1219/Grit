@@ -618,7 +618,8 @@ const BRANCH_KEY='grit_github_branch';
 let state={
   taskStates:{},customRecords:[],mockScores:[],consecutiveDays:0,
   lastActiveDate:'',lowEfficiencyDismissedToday:false,
-  currentStage:'',currentTab:'',subPhaseTab:{},customTasks:[]
+  currentStage:'',currentTab:'',subPhaseTab:{},customTasks:[],
+  syncVersion:0
 };
 
 function loadState(){
@@ -639,7 +640,7 @@ function loadState(){
 }
 function saveState(){
   state.lastActiveDate=getTodayStr();
-  state.lastSaved=Date.now();
+  state.syncVersion=(state.syncVersion||0)+1;
   localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
   scheduleSync();
 }
@@ -1432,19 +1433,18 @@ function scheduleSync(){
 
 async function restoreFromGitHub(){
   const {token,enabled,branch}=getSyncSettings();
-  if(!enabled||!token)return false;
+  if(!enabled||!token)return null;
   try{
     const url='https://api.github.com/repos/'+GITHUB_OWNER+'/'+GITHUB_REPO+'/contents/'+GITHUB_FILE+'?ref='+branch;
     const res=await fetch(url,{headers:{'Authorization':'Bearer '+token,'Accept':'application/vnd.github.v3+json'}});
-    if(!res.ok)return false;
+    if(!res.ok)return null;
     const data=await res.json();
     const binary=atob(data.content.replace(/\s/g,''));
     const bytes=new Uint8Array(binary.length);
     for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
     const content=new TextDecoder().decode(bytes);
-    localStorage.setItem(STORAGE_KEY,content);
-    return true;
-  }catch(e){console.warn('GitHub restore error:',e);return false}
+    return JSON.parse(content);
+  }catch(e){console.warn('GitHub restore error:',e);return null}
 }
 
 // ========== WHITE NOISE (Rain + Fire Crackling) ==========
@@ -1521,11 +1521,11 @@ function createDropBuffer(ctx,durMs){
   return buf;
 }
 
-function startWhiteNoise(){
+async function startWhiteNoise(){
   if(noiseActive)return;
   try{
     ensureAudioContext();
-    if(noiseCtx.state==='suspended'){noiseCtx.resume()}
+    if(noiseCtx.state==='suspended'){await noiseCtx.resume()}
     noiseActive=true;
 
     // ====== RAIN (loud, dominant) ======
@@ -1811,12 +1811,14 @@ async function init(){
   // Pull from GitHub only if remote is newer than local
   if(localStorage.getItem(TOKEN_KEY)){
     try{
-      const restored=await restoreFromGitHub();
-      if(restored){
-        const remoteState=loadState();
-        const localTs=state.lastSaved||0;
-        const remoteTs=remoteState.lastSaved||0;
-        if(remoteTs>localTs){state=remoteState}
+      const remoteData=await restoreFromGitHub();
+      if(remoteData){
+        const localVer=state.syncVersion||0;
+        const remoteVer=remoteData.syncVersion||0;
+        if(remoteVer>localVer){
+          state={...state,...remoteData};
+          localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
+        }
       }
     }catch(e){}
   }
