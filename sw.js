@@ -1,4 +1,4 @@
-const CACHE = 'grit-v3';
+const CACHE = 'grit-v4';
 
 // 激活时清理旧缓存
 self.addEventListener('activate', e => {
@@ -7,7 +7,9 @@ self.addEventListener('activate', e => {
 });
 
 // 网络优先策略：在线时始终获取最新版本，离线时使用缓存
+// 不拦截 GitHub API 请求，避免跨域问题
 self.addEventListener('fetch', e => {
+  if (e.request.url.includes('api.github.com')) return;
   e.respondWith(
     fetch(e.request).then(res => {
       if (res.ok) {
