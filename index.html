@@ -639,6 +639,7 @@ function loadState(){
 }
 function saveState(){
   state.lastActiveDate=getTodayStr();
+  state.lastSaved=Date.now();
   localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
   scheduleSync();
 }
@@ -1807,10 +1808,17 @@ function closeMockTrendModal(){
 // ========== INIT ==========
 async function init(){
   state=loadState();
-  // If localStorage is empty but GitHub token exists, try restore
-  if(!localStorage.getItem(STORAGE_KEY)&&localStorage.getItem(TOKEN_KEY)){
-    const restored=await restoreFromGitHub();
-    if(restored){state=loadState()}
+  // Pull from GitHub only if remote is newer than local
+  if(localStorage.getItem(TOKEN_KEY)){
+    try{
+      const restored=await restoreFromGitHub();
+      if(restored){
+        const remoteState=loadState();
+        const localTs=state.lastSaved||0;
+        const remoteTs=remoteState.lastSaved||0;
+        if(remoteTs>localTs){state=remoteState}
+      }
+    }catch(e){}
   }
   initTaskStates();checkDailyReset();
   const {stage}=getCurrentStageAndSubPhase();
