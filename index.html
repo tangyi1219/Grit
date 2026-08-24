@@ -470,10 +470,10 @@ main{display:flex;gap:12px;padding:12px 16px;max-width:1200px;margin:0 auto}
 // ========== CONSTANTS ==========
 const STAGES = [
   {id:'二级',name:'二级',start:'2026-07-30',end:'2026-09-19',examDate:'2026-09-19',hasSubPhase:false,totalMin:5400},
-  {id:'六级',name:'六级',start:'2027-03-01',end:'2027-06-12',examDate:'2027-06-12',hasSubPhase:true,totalMin:13350,subPhases:[
-    {id:'phase1',name:'基础阶段',start:'2027-03-01',end:'2027-04-02',totalMin:4800},
-    {id:'phase2',name:'强化阶段',start:'2027-04-03',end:'2027-05-18',totalMin:6750},
-    {id:'phase3',name:'冲刺阶段',start:'2027-05-19',end:'2027-06-12',totalMin:1800}
+  {id:'六级',name:'六级',start:'2026-09-20',end:'2026-12-12',examDate:'2026-12-12',hasSubPhase:true,totalMin:13350,subPhases:[
+    {id:'phase1',name:'基础阶段',start:'2026-09-20',end:'2026-10-20',totalMin:4800},
+    {id:'phase2',name:'强化阶段',start:'2026-10-21',end:'2026-11-25',totalMin:6750},
+    {id:'phase3',name:'冲刺阶段',start:'2026-11-26',end:'2026-12-12',totalMin:1800}
   ]},
   {id:'专升本',name:'专升本',start:'2027-06-15',end:'2028-03-21',examDate:'2028-03-21',hasSubPhase:true,totalMin:91740,subPhases:[
     {id:'phase1',name:'基础搭建',start:'2027-06-15',end:'2027-09-30',totalMin:35310},
@@ -504,20 +504,20 @@ function getTaskTemplates(){
   add({name:'弹性学习',durationMinutes:0,difficulty:'低',tags:['弹性'],subject:'',stage:'二级',relatedPhase:'',relatedSubPhase:'',dateRange:{start:'2026-07-30',end:'2026-09-19'},isMockExam:false,elastic:true});
 
   // 六级 Phase 1
-  add({name:'听六级单词课',durationMinutes:55,difficulty:'中',tags:['词汇'],subject:'',stage:'六级',relatedPhase:'phase1',relatedSubPhase:'基础阶段',dateRange:{start:'2027-03-01',end:'2027-04-02'},isMockExam:false});
-  add({name:'做题听力',durationMinutes:65,difficulty:'中',tags:['听力'],subject:'',stage:'六级',relatedPhase:'phase1',relatedSubPhase:'基础阶段',dateRange:{start:'2027-03-01',end:'2027-04-02'},isMockExam:false});
-  add({name:'70min三步复盘（听力）',durationMinutes:70,difficulty:'高',tags:['听力','三步法'],subject:'',stage:'六级',relatedPhase:'phase1',relatedSubPhase:'基础阶段',dateRange:{start:'2027-03-01',end:'2027-04-02'},isMockExam:false});
-  add({name:'做题阅读',durationMinutes:65,difficulty:'中',tags:['阅读'],subject:'',stage:'六级',relatedPhase:'phase1',relatedSubPhase:'基础阶段',dateRange:{start:'2027-03-01',end:'2027-04-02'},isMockExam:false});
-  add({name:'70min三步复盘（阅读）',durationMinutes:70,difficulty:'高',tags:['阅读','三步法'],subject:'',stage:'六级',relatedPhase:'phase1',relatedSubPhase:'基础阶段',dateRange:{start:'2027-03-01',end:'2027-04-02'},isMockExam:false});
+  add({name:'听六级单词课',durationMinutes:55,difficulty:'中',tags:['词汇'],subject:'',stage:'六级',relatedPhase:'phase1',relatedSubPhase:'基础阶段',dateRange:{start:'2026-09-20',end:'2026-10-20'},isMockExam:false});
+  add({name:'做题听力',durationMinutes:65,difficulty:'中',tags:['听力'],subject:'',stage:'六级',relatedPhase:'phase1',relatedSubPhase:'基础阶段',dateRange:{start:'2026-09-20',end:'2026-10-20'},isMockExam:false});
+  add({name:'70min三步复盘（听力）',durationMinutes:70,difficulty:'高',tags:['听力','三步法'],subject:'',stage:'六级',relatedPhase:'phase1',relatedSubPhase:'基础阶段',dateRange:{start:'2026-09-20',end:'2026-10-20'},isMockExam:false});
+  add({name:'做题阅读',durationMinutes:65,difficulty:'中',tags:['阅读'],subject:'',stage:'六级',relatedPhase:'phase1',relatedSubPhase:'基础阶段',dateRange:{start:'2026-09-20',end:'2026-10-20'},isMockExam:false});
+  add({name:'70min三步复盘（阅读）',durationMinutes:70,difficulty:'高',tags:['阅读','三步法'],subject:'',stage:'六级',relatedPhase:'phase1',relatedSubPhase:'基础阶段',dateRange:{start:'2026-09-20',end:'2026-10-20'},isMockExam:false});
   // 六级 Phase 2
-  add({name:'六级题型方法课',durationMinutes:55,difficulty:'中',tags:['方法'],subject:'',stage:'六级',relatedPhase:'phase2',relatedSubPhase:'强化阶段',dateRange:{start:'2027-04-03',end:'2027-05-18'},isMockExam:false});
-  add({name:'对应题型练习',durationMinutes:65,difficulty:'中',tags:['练习'],subject:'',stage:'六级',relatedPhase:'phase2',relatedSubPhase:'强化阶段',dateRange:{start:'2027-04-03',end:'2027-05-18'},isMockExam:false});
-  add({name:'70min复盘',durationMinutes:70,difficulty:'高',tags:['复盘','三步法'],subject:'',stage:'六级',relatedPhase:'phase2',relatedSubPhase:'强化阶段',dateRange:{start:'2027-04-03',end:'2027-05-18'},isMockExam:false});
+  add({name:'六级题型方法课',durationMinutes:55,difficulty:'中',tags:['方法'],subject:'',stage:'六级',relatedPhase:'phase2',relatedSubPhase:'强化阶段',dateRange:{start:'2026-10-21',end:'2026-11-25'},isMockExam:false});
+  add({name:'对应题型练习',durationMinutes:65,difficulty:'中',tags:['练习'],subject:'',stage:'六级',relatedPhase:'phase2',relatedSubPhase:'强化阶段',dateRange:{start:'2026-10-21',end:'2026-11-25'},isMockExam:false});
+  add({name:'70min复盘',durationMinutes:70,difficulty:'高',tags:['复盘','三步法'],subject:'',stage:'六级',relatedPhase:'phase2',relatedSubPhase:'强化阶段',dateRange:{start:'2026-10-21',end:'2026-11-25'},isMockExam:false});
   // 六级 Phase 3
-  add({name:'六级套卷模考',durationMinutes:130,difficulty:'高',tags:['模考'],subject:'',stage:'六级',relatedPhase:'phase3',relatedSubPhase:'冲刺阶段',dateRange:{start:'2027-05-19',end:'2027-06-12'},isMockExam:true});
-  add({name:'旧套卷二刷错题',durationMinutes:65,difficulty:'中',tags:['错题'],subject:'',stage:'六级',relatedPhase:'phase3',relatedSubPhase:'冲刺阶段',dateRange:{start:'2027-05-19',end:'2027-06-12'},isMockExam:false});
-  add({name:'套卷深度复盘',durationMinutes:70,difficulty:'高',tags:['复盘'],subject:'',stage:'六级',relatedPhase:'phase3',relatedSubPhase:'冲刺阶段',dateRange:{start:'2027-05-19',end:'2027-06-12'},isMockExam:false});
-  add({name:'弹性学习',durationMinutes:0,difficulty:'低',tags:['弹性'],subject:'',stage:'六级',relatedPhase:'',relatedSubPhase:'',dateRange:{start:'2027-03-01',end:'2027-06-12'},isMockExam:false,elastic:true});
+  add({name:'六级套卷模考',durationMinutes:130,difficulty:'高',tags:['模考'],subject:'',stage:'六级',relatedPhase:'phase3',relatedSubPhase:'冲刺阶段',dateRange:{start:'2026-11-26',end:'2026-12-12'},isMockExam:true});
+  add({name:'旧套卷二刷错题',durationMinutes:65,difficulty:'中',tags:['错题'],subject:'',stage:'六级',relatedPhase:'phase3',relatedSubPhase:'冲刺阶段',dateRange:{start:'2026-11-26',end:'2026-12-12'},isMockExam:false});
+  add({name:'套卷深度复盘',durationMinutes:70,difficulty:'高',tags:['复盘'],subject:'',stage:'六级',relatedPhase:'phase3',relatedSubPhase:'冲刺阶段',dateRange:{start:'2026-11-26',end:'2026-12-12'},isMockExam:false});
+  add({name:'弹性学习',durationMinutes:0,difficulty:'低',tags:['弹性'],subject:'',stage:'六级',relatedPhase:'',relatedSubPhase:'',dateRange:{start:'2026-09-20',end:'2026-12-12'},isMockExam:false,elastic:true});
 
   // 专升本 Phase 1
   add({name:'阅读刷题',durationMinutes:45,difficulty:'中',tags:[],subject:'英语',stage:'专升本',relatedPhase:'phase1',relatedSubPhase:'基础搭建',dateRange:{start:'2027-06-15',end:'2027-09-30'},isMockExam:false});
